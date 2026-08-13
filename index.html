@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi Pastillero</title>
+<meta name="theme-color" content="#2E7D6B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mi Pastillero">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primario:#2E7D6B;
+    --secundario:#E0A458;
+    --fuente:'Nunito', system-ui, sans-serif;
+
+    --bg:#F6F4EF;
+    --superficie:#FFFFFF;
+    --superficie-2:#FBFAF7;
+    --borde:#E7E2D8;
+    --borde-fuerte:#D8D1C4;
+    --texto:#26302C;
+    --texto-suave:#6B746E;
+    --texto-tenue:#98A09A;
+
+    --ok:#3B9E6E;
+    --alerta:#D96A4A;
+    --critico:#C6432E;
+
+    /* pasteles del casillero */
+    --pastel-pend-bg:#FBF3CE; --pastel-pend-bd:#E8D793; --pastel-pend-tx:#7C6512;
+    --pastel-ok-bg:#D9EFDD;   --pastel-ok-bd:#A6D6B3;   --pastel-ok-tx:#256B41;
+    --pastel-neutro-bg:#ECEAE3; --pastel-neutro-bd:#D5D1C6; --pastel-neutro-tx:#7C776C;
+
+    --sombra:0 1px 2px rgba(38,48,44,.05), 0 8px 24px rgba(38,48,44,.06);
+    --sombra-sm:0 1px 2px rgba(38,48,44,.06);
+    --r:14px;
+    --r-sm:10px;
+
+    --d0:#E8927C; --d1:#E0A458; --d2:#CBB24E; --d3:#6FAE6A;
+    --d4:#3FA0A2; --d5:#6C8CC7; --d6:#A283C9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--fuente);background:var(--bg);color:var(--texto);-webkit-font-smoothing:antialiased;line-height:1.45;padding-bottom:env(safe-area-inset-bottom)}
+  button{font-family:inherit;cursor:pointer}
+  input,select,textarea{font-family:inherit}
+  h1,h2,h3{line-height:1.2}
+  ::selection{background:color-mix(in srgb, var(--secundario) 45%, transparent)}
+
+  .app{max-width:1120px;margin:0 auto;min-height:100vh}
+  header.top{position:sticky;top:0;z-index:40;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--borde);padding:12px 16px calc(12px + env(safe-area-inset-top)) 16px}
+  .top-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .marca{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
+  .logo{width:34px;height:34px;border-radius:9px;flex:0 0 auto;background:linear-gradient(135deg, var(--primario), color-mix(in srgb,var(--primario) 60%, #000 10%));display:grid;place-items:center;color:#fff;box-shadow:var(--sombra-sm);position:relative}
+  .logo::before,.logo::after{content:"";position:absolute;border-radius:2px;background:rgba(255,255,255,.9)}
+  .logo::before{width:12px;height:5px;top:9px}
+  .logo::after{width:5px;height:12px;left:14.5px;top:11px}
+  .spacer{flex:1 1 auto}
+  .pastillero-sel{position:relative}
+  .pastillero-sel select{appearance:none;-webkit-appearance:none;background:var(--superficie);border:1px solid var(--borde-fuerte);border-radius:999px;padding:8px 34px 8px 14px;font-weight:700;font-size:.9rem;color:var(--texto);box-shadow:var(--sombra-sm);max-width:220px}
+  .pastillero-sel::after{content:"▾";position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--texto-suave);pointer-events:none;font-size:.8rem}
+
+  nav.tabs{display:flex;gap:4px;margin-top:12px}
+  nav.tabs button{background:transparent;border:none;border-radius:999px;padding:9px 16px;font-weight:700;font-size:.9rem;color:var(--texto-suave);display:flex;align-items:center;gap:7px;transition:.15s}
+  nav.tabs button .ic{font-size:1.05rem}
+  nav.tabs button:hover{color:var(--texto);background:var(--superficie)}
+  nav.tabs button.activo{background:var(--primario);color:#fff;box-shadow:var(--sombra-sm)}
+
+  main{padding:18px 16px 40px 16px}
+  .vista-titulo{display:flex;align-items:baseline;gap:10px;margin-bottom:4px;flex-wrap:wrap}
+  .vista-titulo h2{font-size:1.35rem;letter-spacing:-.02em}
+  .vista-titulo .sub{color:var(--texto-suave);font-size:.9rem}
+  .vista-desc{color:var(--texto-suave);font-size:.9rem;margin-bottom:16px;max-width:64ch}
+
+  /* Barra de acciones de Registrar */
+  .barra-reg{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .semana-nav{display:flex;align-items:center;gap:8px;background:var(--superficie);border:1px solid var(--borde);border-radius:999px;padding:4px;box-shadow:var(--sombra-sm)}
+  .semana-nav button{width:34px;height:34px;border:none;background:var(--superficie-2);border-radius:50%;font-size:1rem;color:var(--texto-suave)}
+  .semana-nav button:hover{color:var(--texto);background:var(--borde)}
+  .semana-nav .rango{font-weight:800;font-size:.88rem;padding:0 6px;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .plantilla-tag{font-size:.75rem;font-weight:800;color:var(--texto-suave);background:var(--superficie);border:1px solid var(--borde);border-radius:999px;padding:6px 12px}
+
+  .avisos{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+  .aviso{display:flex;align-items:center;gap:10px;background:color-mix(in srgb, var(--critico) 10%, var(--superficie));border:1px solid color-mix(in srgb, var(--critico) 35%, var(--borde));color:color-mix(in srgb, var(--critico) 78%, #000);padding:11px 14px;border-radius:var(--r-sm);font-weight:700;font-size:.9rem;animation:latido 2.4s ease-in-out infinite}
+  .aviso .go{margin-left:auto;font-weight:800;font-size:.82rem;text-decoration:underline;background:none;border:none;color:inherit}
+  @keyframes latido{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--critico) 0%,transparent)}50%{box-shadow:0 0 0 4px color-mix(in srgb,var(--critico) 12%,transparent)}}
+
+  .banner-ok{display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--ok) 12%,var(--superficie));border:1px solid color-mix(in srgb,var(--ok) 40%,var(--borde));color:color-mix(in srgb,var(--ok) 78%,#000);padding:13px 15px;border-radius:var(--r-sm);font-weight:700;font-size:.9rem;margin-bottom:16px}
+  .banner-ok .btn{margin-left:auto}
+
+  @media(prefers-reduced-motion:reduce){.aviso{animation:none}}
+
+  .grid-wrap{background:var(--superficie);border:1px solid var(--borde);border-radius:var(--r);box-shadow:var(--sombra);overflow:hidden}
+  .grid-scroll{overflow:auto}
+  table.grid{border-collapse:separate;border-spacing:0;width:100%;min-width:780px}
+  table.grid th,table.grid td{border-bottom:1px solid var(--borde);border-right:1px solid var(--borde);vertical-align:top}
+  table.grid th:last-child,table.grid td:last-child{border-right:none}
+  table.grid tr:last-child td{border-bottom:none}
+  table.grid thead th{position:sticky;top:0;z-index:2;background:var(--superficie-2);padding:9px 8px;font-size:.82rem;font-weight:800;color:var(--texto);text-align:center}
+  table.grid thead th .diapunto{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  table.grid thead th .fch{display:block;font-size:.72rem;font-weight:700;color:var(--texto-suave);margin-top:1px;font-variant-numeric:tabular-nums}
+  table.grid thead th.hcol{text-align:left;padding-left:14px;width:72px}
+  .hora-celda{background:var(--superficie-2);font-weight:800;font-size:.8rem;color:var(--texto-suave);padding:10px;white-space:nowrap;position:sticky;left:0;z-index:1;width:72px;font-variant-numeric:tabular-nums}
+  td.celda{padding:6px;min-width:96px;cursor:pointer;transition:background .12s}
+  td.celda:hover{background:color-mix(in srgb,var(--primario) 5%,transparent)}
+  td.celda.hoy{background:color-mix(in srgb, var(--secundario) 7%, transparent)}
+  td.celda.hoy:hover{background:color-mix(in srgb, var(--secundario) 12%, transparent)}
+  .add-hint{color:var(--texto-tenue);font-size:1.1rem;text-align:center;opacity:0;transition:.12s}
+  td.celda:hover .add-hint{opacity:.6}
+
+  /* Bloque "Toma" en el casillero */
+  .toma-blk{border-radius:9px;padding:8px 6px;text-align:center;font-weight:800;font-size:.82rem;border:1.5px solid;letter-spacing:.01em;user-select:none}
+  .toma-blk.pend{background:var(--pastel-pend-bg);border-color:var(--pastel-pend-bd);color:var(--pastel-pend-tx)}
+  .toma-blk.ok{background:var(--pastel-ok-bg);border-color:var(--pastel-ok-bd);color:var(--pastel-ok-tx)}
+  .toma-blk.neutro{background:var(--pastel-neutro-bg);border-color:var(--pastel-neutro-bd);color:var(--pastel-neutro-tx)}
+  .toma-blk .cnt{display:block;font-size:.7rem;font-weight:700;opacity:.85;margin-top:1px}
+
+  .dias-nav{display:none;gap:8px;overflow-x:auto;padding:2px 2px 10px 2px;scrollbar-width:none}
+  .dias-nav::-webkit-scrollbar{display:none}
+  .dia-chip{flex:0 0 auto;min-width:62px;text-align:center;background:var(--superficie);border:1.5px solid var(--borde);border-radius:14px;padding:9px 12px;box-shadow:var(--sombra-sm);transition:.15s}
+  .dia-chip .dow{font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;gap:5px}
+  .dia-chip .dot{width:8px;height:8px;border-radius:50%}
+  .dia-chip .fch{font-size:.68rem;color:var(--texto-suave);margin-top:2px;font-variant-numeric:tabular-nums}
+  .dia-chip .cnt{font-size:.66rem;color:var(--texto-tenue);margin-top:1px}
+  .dia-chip.activo{border-color:var(--primario);background:color-mix(in srgb,var(--primario) 8%,var(--superficie))}
+  .dia-chip.hoy{outline:2px dashed color-mix(in srgb,var(--secundario) 60%,transparent);outline-offset:2px}
+
+  .hora-bloque{margin-bottom:12px}
+  .hora-bloque > .lbl{font-weight:800;font-size:.9rem;color:var(--texto-suave);margin:0 0 8px 2px;display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums}
+  .hora-bloque > .lbl::after{content:"";flex:1;height:1px;background:var(--borde)}
+  .mob-slot{background:var(--superficie);border:1px solid var(--borde);border-radius:var(--r-sm);padding:10px;cursor:pointer}
+  .mob-vacio{background:var(--superficie);border:1px dashed var(--borde-fuerte);border-radius:var(--r);padding:24px 16px;text-align:center;color:var(--texto-suave)}
+  .mob-vacio .em{font-size:1.6rem;display:block;margin-bottom:6px}
+
+  .panel{background:var(--superficie);border:1px solid var(--borde);border-radius:var(--r);box-shadow:var(--sombra);padding:18px;margin-bottom:16px}
+  .panel h3{font-size:1rem;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .panel h3 .ic{font-size:1.05rem}
+  .panel .hint{color:var(--texto-suave);font-size:.85rem;margin-bottom:14px}
+
+  .grid-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .campo{display:flex;flex-direction:column;gap:5px}
+  .campo.full{grid-column:1/-1}
+  .campo label{font-weight:700;font-size:.82rem;color:var(--texto-suave)}
+  .campo input,.campo select,.campo textarea{background:var(--superficie-2);border:1.5px solid var(--borde-fuerte);border-radius:var(--r-sm);padding:11px 12px;font-size:.95rem;color:var(--texto);width:100%;transition:border-color .15s, box-shadow .15s}
+  .campo textarea{resize:vertical;min-height:64px}
+  .campo input:focus,.campo select:focus,.campo textarea:focus{outline:none;border-color:var(--primario);box-shadow:0 0 0 3px color-mix(in srgb,var(--primario) 18%,transparent)}
+  .campo input[type=color]{padding:4px;height:44px;cursor:pointer}
+  .check{display:flex;align-items:center;gap:9px;background:var(--superficie-2);border:1.5px solid var(--borde-fuerte);border-radius:var(--r-sm);padding:11px 12px;font-weight:700;font-size:.9rem;cursor:pointer}
+  .check input{width:18px;height:18px;accent-color:var(--primario)}
+
+  .btn{border:none;border-radius:var(--r-sm);padding:11px 18px;font-weight:800;font-size:.92rem;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s, transform .08s, background .15s}
+  .btn:active{transform:translateY(1px)}
+  .btn.primario{background:var(--primario);color:#fff;box-shadow:var(--sombra-sm)}
+  .btn.primario:hover{filter:brightness(1.07)}
+  .btn.sec{background:color-mix(in srgb,var(--secundario) 18%,var(--superficie));color:color-mix(in srgb,var(--secundario) 70%,#000);border:1.5px solid color-mix(in srgb,var(--secundario) 40%,transparent)}
+  .btn.ghost{background:var(--superficie-2);color:var(--texto);border:1.5px solid var(--borde-fuerte)}
+  .btn.ghost:hover{border-color:var(--texto-suave)}
+  .btn.peligro{background:color-mix(in srgb,var(--critico) 12%,var(--superficie));color:var(--critico);border:1.5px solid color-mix(in srgb,var(--critico) 35%,transparent)}
+  .btn.peligro:hover{background:color-mix(in srgb,var(--critico) 18%,var(--superficie))}
+  .btn.mini{padding:7px 11px;font-size:.82rem;border-radius:8px}
+  .btn.block{width:100%}
+  .btn[disabled]{opacity:.45;cursor:not-allowed}
+  .form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+
+  .intervalos{display:flex;flex-wrap:wrap;gap:8px}
+  .intervalos button{background:var(--superficie-2);border:1.5px solid var(--borde-fuerte);border-radius:999px;padding:9px 16px;font-weight:800;font-size:.88rem;color:var(--texto-suave);transition:.15s}
+  .intervalos button.activo{background:var(--primario);color:#fff;border-color:var(--primario)}
+
+  .lista{display:flex;flex-direction:column;gap:10px}
+  .item{display:flex;align-items:center;gap:12px;background:var(--superficie-2);border:1px solid var(--borde);border-radius:var(--r-sm);padding:12px 14px}
+  .item .barra{width:5px;align-self:stretch;border-radius:3px;background:var(--acc,var(--primario));flex:0 0 auto}
+  .item-main{flex:1 1 auto;min-width:0}
+  .item-t{font-weight:800;font-size:.95rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .item-s{font-size:.82rem;color:var(--texto-suave);margin-top:2px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .item-acc{display:flex;gap:6px;flex:0 0 auto}
+  .icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--borde-fuerte);background:var(--superficie);display:grid;place-items:center;font-size:1rem;color:var(--texto-suave);transition:.15s}
+  .icon-btn:hover{color:var(--texto);border-color:var(--texto-suave)}
+  .icon-btn.del:hover{color:var(--critico);border-color:var(--critico)}
+
+  .badge{font-size:.7rem;font-weight:800;padding:2px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.03em}
+  .badge.normal{background:color-mix(in srgb,var(--ok) 15%,transparent);color:color-mix(in srgb,var(--ok) 80%,#000)}
+  .badge.critico{background:color-mix(in srgb,var(--alerta) 16%,transparent);color:color-mix(in srgb,var(--alerta) 82%,#000)}
+  .badge.agotado{background:color-mix(in srgb,var(--critico) 16%,transparent);color:var(--critico)}
+  .badge.tipo{background:color-mix(in srgb,var(--primario) 14%,transparent);color:color-mix(in srgb,var(--primario) 82%,#000)}
+  .badge-est{font-size:.66rem;font-weight:800;padding:1px 7px;border-radius:999px;color:#fff;text-transform:uppercase;letter-spacing:.02em}
+  .stock-num{font-weight:800;font-variant-numeric:tabular-nums}
+  .vacio-lista{text-align:center;color:var(--texto-suave);padding:20px;border:1px dashed var(--borde-fuerte);border-radius:var(--r-sm);font-size:.9rem}
+  .swatch{width:16px;height:16px;border-radius:5px;border:1px solid rgba(0,0,0,.12);flex:0 0 auto}
+
+  .preview{border:1px solid var(--borde);border-radius:var(--r-sm);overflow:hidden}
+  .preview .pv-head{background:var(--primario);color:#fff;padding:12px 16px;font-weight:800}
+  .preview .pv-body{padding:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .pv-dot{width:34px;height:34px;border-radius:9px}
+  .fuente-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .fuente-op{border:1.5px solid var(--borde-fuerte);border-radius:var(--r-sm);padding:12px;background:var(--superficie-2);text-align:left;transition:.15s}
+  .fuente-op:hover{border-color:var(--texto-suave)}
+  .fuente-op.activo{border-color:var(--primario);box-shadow:0 0 0 3px color-mix(in srgb,var(--primario) 16%,transparent)}
+  .fuente-op .fn{font-size:.72rem;font-weight:800;color:var(--texto-suave);text-transform:uppercase;letter-spacing:.04em}
+  .fuente-op .ej{font-size:1.15rem;font-weight:700;margin-top:3px}
+
+  .bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:50;background:color-mix(in srgb, var(--superficie) 92%, transparent);backdrop-filter:blur(12px);border-top:1px solid var(--borde);padding:6px 6px calc(6px + env(safe-area-inset-bottom)) 6px;grid-template-columns:repeat(4,1fr)}
+  .bottom-nav button{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:12px;color:var(--texto-suave);font-weight:700;font-size:.68rem}
+  .bottom-nav button .ic{font-size:1.35rem;line-height:1}
+  .bottom-nav button.activo{color:var(--primario)}
+
+  #toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:88px;z-index:110;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:calc(100% - 32px);max-width:420px}
+  .toast{background:var(--texto);color:#fff;padding:11px 16px;border-radius:999px;font-weight:700;font-size:.88rem;box-shadow:0 8px 24px rgba(0,0,0,.22);display:flex;align-items:center;gap:9px;animation:toastIn .25s ease;max-width:100%}
+  .toast.ok{background:var(--ok)} .toast.alerta{background:var(--alerta)} .toast.error{background:var(--critico)}
+  @keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  .modal-bg{position:fixed;inset:0;z-index:90;background:rgba(20,26,23,.45);backdrop-filter:blur(2px);display:grid;place-items:center;padding:20px;animation:fade .18s ease;overflow-y:auto}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .modal{background:var(--superficie);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.28);width:100%;max-width:420px;padding:22px;animation:modalIn .22s cubic-bezier(.2,.8,.2,1);margin:auto}
+  .modal.ancho{max-width:540px}
+  @keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(8px)}to{opacity:1;transform:scale(1)}}
+  .modal h3{font-size:1.12rem;margin-bottom:4px}
+  .modal .m-sub{color:var(--texto-suave);font-size:.9rem;margin-bottom:16px}
+  .modal p{color:var(--texto-suave);font-size:.92rem;margin-bottom:18px}
+  .modal .m-acc{display:flex;gap:10px;justify-content:flex-end}
+  .modal .campo{margin-bottom:12px}
+  .m-close{position:absolute}
+  .modal-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
+  .modal-head .x{margin-left:auto;width:32px;height:32px;border-radius:8px;border:none;background:var(--superficie-2);color:var(--texto-suave);font-size:1.1rem;flex:0 0 auto}
+  .modal-head .x:hover{background:var(--borde);color:var(--texto)}
+
+  .toma-row{display:flex;align-items:center;gap:10px;border:1px solid var(--borde);border-radius:var(--r-sm);padding:10px 12px;margin-bottom:8px;background:var(--superficie-2)}
+  .toma-row .tr-bar{width:4px;align-self:stretch;border-radius:2px;flex:0 0 auto}
+  .toma-row .tr-main{flex:1 1 auto;min-width:0}
+  .toma-row .tr-n{font-weight:800;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .toma-row .tr-m{font-size:.76rem;color:var(--texto-suave);margin-top:1px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .toma-row select{background:var(--superficie);border:1px solid var(--borde-fuerte);border-radius:8px;padding:5px 8px;font-size:.78rem;font-weight:700;color:var(--texto)}
+  .toma-row .tr-del{width:32px;height:32px;border-radius:8px;border:1px solid var(--borde-fuerte);background:var(--superficie);color:var(--texto-suave);font-size:.95rem;flex:0 0 auto}
+  .toma-row .tr-del:hover{color:var(--critico);border-color:var(--critico)}
+  .add-box{border-top:1px dashed var(--borde-fuerte);margin-top:14px;padding-top:14px}
+  .add-box .grid-form{gap:10px}
+
+  @media(max-width:768px){
+    nav.tabs{display:none}
+    main{padding:16px 12px 96px 12px}
+    .bottom-nav{display:grid}
+    #toasts{bottom:calc(78px + env(safe-area-inset-bottom))}
+    .grid-scroll{display:none}
+    .dias-nav{display:flex}
+    .grid-form{grid-template-columns:1fr}
+    .pastillero-sel select{max-width:150px}
+    .marca{font-size:1.05rem}
+    .modal{max-width:100%}
+  }
+  @media(min-width:769px){ .mob-dia{display:none} }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="top-row">
+      <div class="marca"><span class="logo" aria-hidden="true"></span> Mi Pastillero</div>
+      <span class="spacer"></span>
+      <div class="pastillero-sel"><select id="selPastillero" aria-label="Pastillero activo"></select></div>
+    </div>
+    <nav class="tabs" id="tabs"></nav>
+  </header>
+  <main id="vista"></main>
+</div>
+<nav class="bottom-nav" id="bottomNav" aria-label="Navegación"></nav>
+<div id="toasts" aria-live="polite"></div>
+<div id="modalHost"></div>
+
+<script>
+"use strict";
+(function(){
+  /* ===================== Constantes ===================== */
+  const LS_KEY = "miPastillero.v2";
+  const DIAS = [
+    {corto:"Lun", largo:"Lunes"},{corto:"Mar", largo:"Martes"},{corto:"Mié", largo:"Miércoles"},
+    {corto:"Jue", largo:"Jueves"},{corto:"Vie", largo:"Viernes"},{corto:"Sáb", largo:"Sábado"},{corto:"Dom", largo:"Domingo"}
+  ];
+  const TABS = [
+    {k:"registrar", ic:"🗓️", label:"Registrar"},
+    {k:"cargar",    ic:"➕", label:"Cargar"},
+    {k:"config",    ic:"⚙️", label:"Config"},
+    {k:"apariencia",ic:"🎨", label:"Ajustes"}
+  ];
+  const INTERVALOS = [0.5,1,2,4,6,8,12];
+  const FUENTES = [
+    {css:"'Nunito', system-ui, sans-serif", nombre:"Nunito"},
+    {css:"'Inter', system-ui, sans-serif", nombre:"Inter"},
+    {css:"'Poppins', system-ui, sans-serif", nombre:"Poppins"},
+    {css:"'Lora', Georgia, serif", nombre:"Lora"},
+    {css:"'Roboto Slab', Georgia, serif", nombre:"Roboto Slab"}
+  ];
+
+  /* ===================== Utilidades ===================== */
+  const $ = (s, c=document) => c.querySelector(s);
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  const esc = (s) => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const clamp = (n,mn,mx) => Math.max(mn, Math.min(mx, n));
+
+  const isoDe = (d) => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  const hoyISO = () => isoDe(new Date());
+  const fromISO = (s) => { const p=String(s).split("-").map(Number); return new Date(p[0], (p[1]||1)-1, p[2]||1); };
+  const addDays = (iso,n) => { const d=fromISO(iso); d.setDate(d.getDate()+n); return isoDe(d); };
+  const dowIndex = (iso) => (fromISO(iso).getDay()+6)%7;          // 0=Lun..6=Dom
+  const diaCorto = (iso) => DIAS[dowIndex(iso)].corto;
+  const diaLargo = (iso) => DIAS[dowIndex(iso)].largo;
+  const fmtDDMM = (iso) => { const p=String(iso).split("-"); return p[2]+"/"+p[1]; };
+  const lunesDe = (iso) => addDays(iso, -dowIndex(iso));
+
+  function horasDeIntervalo(intervalo){
+    const paso = Math.max(1, Math.round((Number(intervalo)||8)*60));
+    const out=[];
+    for(let m=0;m<24*60;m+=paso){ out.push(String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0")); }
+    return out;
+  }
+  const hhmmMin = (t) => { const p=String(t||"00:00").split(":").map(Number); return (p[0]||0)*60+(p[1]||0); };
+  function filaPara(hora, filas){ const m=hhmmMin(hora); let el=filas[0]; for(const f of filas){ if(hhmmMin(f)<=m) el=f; else break; } return el; }
+
+  /* ===================== Estado ===================== */
+  function estadoInicial(){
+    const pid = uid();
+    return {
+      version:2,
+      contadorPastillero:1,
+      pastilleroActivo:pid,
+      pastilleros:[{ id:pid, numero:1, nombre:"Principal", tipo:"semanal", fechaInicio:lunesDe(hoyISO()), creado:hoyISO() }],
+      medicamentos:[],
+      tomas:[],           // {id,pastilleroId,fecha,hora,medicamentoId|null,nombreLibre|null,cantidad,estado,descontado}
+      compras:[],         // {id,pastilleroId,medicamentoId,medNombre,cantidad,precio,fecha,nota}
+      eliminaciones:[],   // {id,fecha,pastilleroId,medNombre,tomaFecha,hora,causa}
+      estadosToma:[
+        {id:"pendiente",  nombre:"Pendiente",  color:"#E0A458"},
+        {id:"confirmado", nombre:"Confirmado", color:"#3B9E6E"},
+        {id:"cancelado",  nombre:"Cancelado",  color:"#9AA29C"}
+      ],
+      config:{ intervalo:8, colorPrimario:"#2E7D6B", colorSecundario:"#E0A458", fuente:"'Nunito', system-ui, sans-serif", avisos:{activos:false, sonido:true, antelacion:0} },
+      ui:{ vista:"registrar", semanaOffset:0, verTodo:false, diaMovil:hoyISO(), editandoToma:null, editandoMed:null }
+    };
+  }
+
+  let state = cargar();
+  let celdaAbierta = null;   // {fecha,hora} del modal de gestión de celda
+
+  function cargar(){
+    try{
+      const raw = localStorage.getItem(LS_KEY) || localStorage.getItem("miPastillero.v1");
+      if(!raw) return estadoInicial();
+      let s = JSON.parse(raw);
+      s = migrar(s);
+      const base = estadoInicial();
+      s.config = Object.assign(base.config, s.config||{});
+      s.config.avisos = Object.assign({}, base.config.avisos, s.config.avisos||{});
+      s.ui = Object.assign(base.ui, s.ui||{});
+      if(!Array.isArray(s.estadosToma)||!s.estadosToma.length) s.estadosToma = base.estadosToma;
+      if(!Array.isArray(s.pastilleros)||!s.pastilleros.length){ s.pastilleros=base.pastilleros; s.pastilleroActivo=base.pastilleroActivo; }
+      if(!s.pastilleros.some(p=>p.id===s.pastilleroActivo)) s.pastilleroActivo=s.pastilleros[0].id;
+      s.medicamentos = s.medicamentos||[];
+      s.tomas = s.tomas||[];
+      s.compras = s.compras||[];
+      s.eliminaciones = s.eliminaciones||[];
+      s.contadorPastillero = s.contadorPastillero || s.pastilleros.reduce((a,p)=>Math.max(a,p.numero||0),0) || 1;
+      return s;
+    }catch(e){ console.warn("Almacenamiento ilegible, arranco limpio.", e); return estadoInicial(); }
+  }
+
+  // Migración desde v1 (tomas con "dia" lun..dom) a v2 (tomas con "fecha")
+  function migrar(s){
+    if(s.version===2 && !(s.tomas||[]).some(t=>t.dia && !t.fecha)) return s;
+    const clavesV1 = {lun:0,mar:1,mie:2,jue:3,vie:4,sab:5,dom:6};
+    let cont = 0;
+    (s.pastilleros||[]).forEach((p)=>{
+      if(!p.numero) p.numero = ++cont;
+      if(!p.tipo) p.tipo = "semanal";
+      if(!p.fechaInicio) p.fechaInicio = lunesDe(hoyISO());
+      if(!p.creado) p.creado = hoyISO();
+    });
+    (s.tomas||[]).forEach(t=>{
+      if(!t.fecha){
+        const past = (s.pastilleros||[]).find(p=>p.id===t.pastilleroId) || (s.pastilleros||[])[0];
+        const ini = past ? past.fechaInicio : lunesDe(hoyISO());
+        const idx = (t.dia in clavesV1) ? clavesV1[t.dia] : 0;
+        t.fecha = addDays(lunesDe(ini), idx);
+      }
+      if(t.medicamentoId===undefined) t.medicamentoId = null;
+      if(t.nombreLibre===undefined) t.nombreLibre = null;
+      delete t.dia;
+    });
+    s.version = 2;
+    s.contadorPastillero = (s.pastilleros||[]).reduce((a,p)=>Math.max(a,p.numero||0),0) || 1;
+    return s;
+  }
+
+  function guardar(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){ toast("No se pudo guardar (almacenamiento lleno)","error"); } }
+
+  /* ===================== Selectores ===================== */
+  const pastAct = () => state.pastilleros.find(p=>p.id===state.pastilleroActivo) || state.pastilleros[0];
+  const meds = () => state.medicamentos.filter(m=>m.pastilleroId===state.pastilleroActivo);
+  const tomasAct = () => state.tomas.filter(t=>t.pastilleroId===state.pastilleroActivo);
+  const medPorId = (id) => state.medicamentos.find(m=>m.id===id);
+  const estadoPorId = (id) => state.estadosToma.find(e=>e.id===id) || state.estadosToma[0];
+  const esConfirmado = (t) => estadoPorId(t.estado).nombre.toLowerCase().startsWith("confirm");
+  const esCancelado  = (t) => estadoPorId(t.estado).nombre.toLowerCase().startsWith("cancel");
+  const nombreToma = (t) => { if(t.medicamentoId){ const m=medPorId(t.medicamentoId); return m?m.nombre:"(medicamento borrado)"; } return t.nombreLibre||"(sin nombre)"; };
+  const nivelStock = (m) => (m.stock<=0?"agotado":(m.stock<=(m.stockCritico||0)?"critico":"normal"));
+
+  function columnas(){ const p=pastAct(); const base=addDays(p.fechaInicio, (state.ui.semanaOffset||0)*7); return Array.from({length:7},(_,i)=>addDays(base,i)); }
+  const tomasEnFecha = (iso) => tomasAct().filter(t=>t.fecha===iso);
+
+  /* ===================== Stock ===================== */
+  function sincronizarStock(t){
+    if(!t.medicamentoId) return;              // toma no registrada => no toca stock
+    const m = medPorId(t.medicamentoId); if(!m) return;
+    const cant = Number(t.cantidad)||0;
+    if(esConfirmado(t) && !t.descontado){ m.stock=Math.max(0,(Number(m.stock)||0)-cant); t.descontado=true; }
+    else if(!esConfirmado(t) && t.descontado){ m.stock=(Number(m.stock)||0)+cant; t.descontado=false; }
+  }
+  function revertirStock(t){ if(t.descontado && t.medicamentoId){ const m=medPorId(t.medicamentoId); if(m) m.stock=(Number(m.stock)||0)+(Number(t.cantidad)||0); t.descontado=false; } }
+
+  /* ===================== Tema / Toast / Modal ===================== */
+  function aplicarTema(){ const r=document.documentElement.style; r.setProperty("--primario",state.config.colorPrimario); r.setProperty("--secundario",state.config.colorSecundario); r.setProperty("--fuente",state.config.fuente); }
+
+  function toast(msg,tipo=""){
+    const host=$("#toasts"); const el=document.createElement("div");
+    el.className="toast "+tipo;
+    const ic=tipo==="ok"?"✓":tipo==="error"?"✕":tipo==="alerta"?"!":"•";
+    el.innerHTML='<span>'+ic+'</span><span>'+esc(msg)+'</span>';
+    host.appendChild(el);
+    setTimeout(()=>{ el.style.opacity="0"; el.style.transform="translateY(8px)"; setTimeout(()=>el.remove(),250); }, 2300);
+  }
+
+  function modal({titulo,mensaje,campos,confirmar="Aceptar",cancelar="Cancelar",peligro=false}){
+    return new Promise(resolve=>{
+      const host=$("#modalHost");
+      const camposHtml=(campos||[]).map((c,i)=>{
+        if(c.tipo==="select"){
+          const ops=c.opciones.map(o=>'<option value="'+esc(o.value)+'"'+(o.value===c.valor?' selected':'')+'>'+esc(o.label)+'</option>').join("");
+          return '<div class="campo"><label>'+esc(c.label)+'</label><select data-mi="'+i+'">'+ops+'</select></div>';
+        }
+        if(c.tipo==="textarea"){
+          return '<div class="campo"><label>'+esc(c.label)+'</label><textarea data-mi="'+i+'" placeholder="'+esc(c.ph||"")+'">'+esc(c.valor||"")+'</textarea></div>';
+        }
+        return '<div class="campo"><label>'+esc(c.label)+'</label><input data-mi="'+i+'" type="'+(c.tipo||"text")+'" value="'+esc(c.valor==null?"":c.valor)+'" placeholder="'+esc(c.ph||"")+'"'+(c.attrs||"")+'></div>';
+      }).join("");
+      const bg=document.createElement("div"); bg.className="modal-bg";
+      bg.innerHTML='<div class="modal" role="dialog" aria-modal="true"><h3>'+esc(titulo)+'</h3>'+(mensaje?'<p>'+esc(mensaje)+'</p>':'')+camposHtml+
+        '<div class="m-acc">'+(cancelar?'<button class="btn ghost" data-mx="0">'+esc(cancelar)+'</button>':'')+'<button class="btn '+(peligro?'peligro':'primario')+'" data-mx="1">'+esc(confirmar)+'</button></div></div>';
+      host.appendChild(bg);
+      const inputs=[...bg.querySelectorAll("[data-mi]")]; if(inputs[0]) setTimeout(()=>inputs[0].focus(),50);
+      function cerrar(res){ bg.remove(); resolve(res); }
+      bg.addEventListener("click",e=>{
+        if(e.target===bg) return cerrar(null);
+        const b=e.target.closest("[data-mx]"); if(!b) return;
+        if(b.dataset.mx==="0") return cerrar(null);
+        if(campos&&campos.length){ const v={}; inputs.forEach(inp=>{ v[campos[inp.dataset.mi].key]=inp.value; }); cerrar(v); }
+        else cerrar(true);
+      });
+      bg.addEventListener("keydown",e=>{ if(e.key==="Escape") cerrar(null); if(e.key==="Enter"&&e.target.tagName==="INPUT"){ const ok=bg.querySelector('[data-mx="1"]'); if(ok) ok.click(); } });
+    });
+  }
+  const confirmar=(t,m,peligro=false)=>modal({titulo:t,mensaje:m,confirmar:peligro?"Eliminar":"Confirmar",peligro});
+
+  /* ===================== Render ===================== */
+  function render(){
+    aplicarTema();
+    renderChrome();
+    const host=$("#vista"); const v=state.ui.vista;
+    if(v==="registrar") host.innerHTML=vistaRegistrar();
+    else if(v==="cargar") host.innerHTML=vistaCargar();
+    else if(v==="config") host.innerHTML=vistaConfig();
+    else host.innerHTML=vistaAjustes();
+    host.scrollTop=0;
+  }
+  function renderChrome(){
+    $("#selPastillero").innerHTML=state.pastilleros.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===state.pastilleroActivo?' selected':'')+'>N°'+(p.numero||"?")+' · '+esc(p.nombre)+'</option>').join("");
+    $("#tabs").innerHTML=TABS.map(t=>'<button data-ac="tab" data-k="'+t.k+'" class="'+(state.ui.vista===t.k?'activo':'')+'"><span class="ic">'+t.ic+'</span>'+t.label+'</button>').join("");
+    $("#bottomNav").innerHTML=TABS.map(t=>'<button data-ac="tab" data-k="'+t.k+'" class="'+(state.ui.vista===t.k?'activo':'')+'"><span class="ic">'+t.ic+'</span>'+t.label+'</button>').join("");
+  }
+
+  function avisosStock(){
+    const bajos=meds().filter(m=>nivelStock(m)!=="normal"); if(!bajos.length) return "";
+    return '<div class="avisos">'+bajos.map(m=>{
+      const n=nivelStock(m); const txt=n==="agotado"?"Sin stock":"Quedan "+m.stock;
+      return '<div class="aviso"><span>🛒</span><span>Comprar '+esc(m.nombre)+' — '+txt+'</span><button class="go" data-ac="ir-compra" data-id="'+esc(m.id)+'">Registrar compra</button></div>';
+    }).join("")+'</div>';
+  }
+
+  /* ---------- Registrar ---------- */
+  function semanaTodaConfirmada(){
+    const cols=columnas(); const set=new Set(cols);
+    const list=tomasAct().filter(t=>set.has(t.fecha) && !esCancelado(t));
+    return list.length>0 && list.every(esConfirmado);
+  }
+
+  function bloqueCelda(fecha,hora,filas){
+    const enCelda=tomasEnFecha(fecha).filter(t=>filaPara(t.hora,filas)===hora);
+    if(!enCelda.length) return '<div class="add-hint">+</div>';
+    const activas=enCelda.filter(t=>!esCancelado(t));
+    let clase="neutro";
+    if(activas.length){ clase = activas.every(esConfirmado) ? "ok" : "pend"; }
+    const n=enCelda.length;
+    return '<div class="toma-blk '+clase+'">Toma'+(n>1?'<span class="cnt">'+n+' medicamentos</span>':'')+'</div>';
+  }
+
+  function vistaRegistrar(){
+    const p=pastAct(); const filas=horasDeIntervalo(state.config.intervalo); const cols=columnas(); const hoy=hoyISO();
+    const filasVis = state.ui.verTodo ? filas : filas.filter(f=>cols.some(c=>tomasEnFecha(c).some(t=>filaPara(t.hora,filas)===f)));
+
+    // barra superior
+    const rango=fmtDDMM(cols[0])+" al "+fmtDDMM(cols[6]);
+    const barra='<div class="barra-reg">'+
+      '<div class="semana-nav"><button data-ac="sem" data-d="-1" title="Semana anterior">‹</button>'+
+        '<span class="rango">'+esc(rango)+'</span>'+
+        '<button data-ac="sem" data-d="1" title="Semana siguiente">›</button></div>'+
+      '<span class="plantilla-tag">N°'+(p.numero||"?")+' · '+esc(p.tipo)+'</span>'+
+      '<span class="spacer"></span>'+
+      '<button class="btn ghost mini" data-ac="ver-todo">'+(state.ui.verTodo?'👁️ Ver solo con tomas':'👁️ Ver todo')+'</button>'+
+      '<button class="btn sec mini" data-ac="agregar-toma">➕ Agregar toma</button>'+
+    '</div>';
+
+    const banner = semanaTodaConfirmada()
+      ? '<div class="banner-ok"><span>🎉</span><span>¡Semana completa! Confirmaste todas las tomas.</span><button class="btn primario mini" data-ac="clonar-past">Crear pastillero siguiente</button></div>'
+      : "";
+
+    // desktop
+    let thead='<tr><th class="hcol">Hora</th>'+cols.map(c=>{
+      const di=dowIndex(c);
+      return '<th'+(c===hoy?' style="background:color-mix(in srgb,var(--secundario) 12%,var(--superficie-2))"':'')+'><span class="diapunto" style="background:var(--d'+di+')"></span>'+diaCorto(c)+'<span class="fch">'+fmtDDMM(c)+'</span></th>';
+    }).join("")+'</tr>';
+
+    let cuerpo;
+    if(!filasVis.length){
+      cuerpo='<tr><td class="hora-celda"></td><td colspan="7" style="padding:26px;text-align:center;color:var(--texto-suave)">No hay tomas esta semana. Tocá <b>Agregar toma</b> o activá <b>Ver todo</b> para cargar en cualquier horario.</td></tr>';
+    } else {
+      cuerpo=filasVis.map(f=>{
+        const celdas=cols.map(c=>'<td class="celda'+(c===hoy?' hoy':'')+'" data-ac="celda" data-fecha="'+c+'" data-hora="'+f+'">'+bloqueCelda(c,f,filas)+'</td>').join("");
+        return '<tr><td class="hora-celda">'+f+'</td>'+celdas+'</tr>';
+      }).join("");
+    }
+    const desktop='<div class="grid-wrap"><div class="grid-scroll"><table class="grid"><thead>'+thead+'</thead><tbody>'+cuerpo+'</tbody></table></div></div>';
+
+    // móvil día por día
+    let dm=state.ui.diaMovil; if(!cols.includes(dm)) dm=cols.includes(hoy)?hoy:cols[0];
+    const chips=cols.map(c=>{
+      const di=dowIndex(c); const n=tomasEnFecha(c).length;
+      return '<button class="dia-chip'+(c===dm?' activo':'')+(c===hoy?' hoy':'')+'" data-ac="dia-movil" data-fecha="'+c+'">'+
+        '<div class="dow"><span class="dot" style="background:var(--d'+di+')"></span>'+diaCorto(c)+'</div>'+
+        '<div class="fch">'+fmtDDMM(c)+'</div><div class="cnt">'+(n?n+(n===1?' toma':' tomas'):'libre')+'</div></button>';
+    }).join("");
+    const filasMovil = state.ui.verTodo ? filas : filas.filter(f=>tomasEnFecha(dm).some(t=>filaPara(t.hora,filas)===f));
+    let cuerpoMovil;
+    if(!filasMovil.length){
+      cuerpoMovil='<div class="mob-vacio"><span class="em">🌤️</span>Sin tomas para '+esc(diaCorto(dm))+' '+esc(fmtDDMM(dm))+'.<br><button class="btn sec mini" data-ac="agregar-toma" style="margin-top:10px">Agregar toma</button></div>';
+    } else {
+      cuerpoMovil=filasMovil.map(f=>'<div class="hora-bloque"><div class="lbl">🕐 '+f+'</div><div class="mob-slot" data-ac="celda" data-fecha="'+dm+'" data-hora="'+f+'">'+bloqueCelda(dm,f,filas)+'</div></div>').join("");
+    }
+    const movil='<div class="mob-dia"><div class="dias-nav">'+chips+'</div>'+cuerpoMovil+'</div>';
+
+    return '<div class="vista-titulo"><h2>Registrar toma</h2><span class="sub">'+esc(p.nombre)+'</span></div>'+
+      '<p class="vista-desc">Tocá un casillero para ver, agregar o confirmar los medicamentos de ese horario. Al confirmar se descuenta el stock.</p>'+
+      barra + avisosStock() + banner + desktop + movil;
+  }
+
+  /* ---------- Modal de gestión de celda ---------- */
+  function htmlCeldaModal(fecha,hora){
+    const filas=horasDeIntervalo(state.config.intervalo);
+    const list=tomasEnFecha(fecha).filter(t=>filaPara(t.hora,filas)===hora).sort((a,b)=>hhmmMin(a.hora)-hhmmMin(b.hora));
+    const filasRows=list.length ? list.map(t=>{
+      const est=estadoPorId(t.estado);
+      const opts=state.estadosToma.map(e=>'<option value="'+esc(e.id)+'"'+(e.id===t.estado?' selected':'')+'>'+esc(e.nombre)+'</option>').join("");
+      const libre = t.medicamentoId ? "" : ' · sin registrar';
+      return '<div class="toma-row"><div class="tr-bar" style="background:'+esc(est.color)+'"></div>'+
+        '<div class="tr-main"><div class="tr-n">'+esc(nombreToma(t))+'</div>'+
+          '<div class="tr-m"><span>🕐 '+esc(t.hora)+'</span><span>💊 '+(Number(t.cantidad)||0)+' u.'+libre+'</span></div></div>'+
+        '<select data-cf="estado" data-id="'+esc(t.id)+'">'+opts+'</select>'+
+        '<button class="tr-del" data-ac="celda-del" data-id="'+esc(t.id)+'" title="Eliminar">🗑️</button></div>';
+    }).join("") : '<div class="vacio-lista" style="margin-bottom:6px">Sin medicamentos en este horario todavía.</div>';
+
+    const catalogo=meds();
+    const optMed = '<option value="">— Elegí un medicamento —</option>'+catalogo.map(m=>'<option value="'+esc(m.id)+'">'+esc(m.nombre)+(m.dosis?' ('+esc(m.dosis)+')':'')+'</option>').join("");
+    const optEst = state.estadosToma.map(e=>'<option value="'+esc(e.id)+'"'+(e.id==="pendiente"?' selected':'')+'>'+esc(e.nombre)+'</option>').join("");
+
+    const addBox='<div class="add-box"><div class="tr-n" style="margin-bottom:8px">➕ Agregar a este horario</div>'+
+      '<div class="grid-form">'+
+        '<div class="campo full"><label>Medicamento registrado</label><select data-cf="med">'+optMed+'</select></div>'+
+        '<div class="campo full"><label>… o escribí uno no registrado</label><input data-cf="libre" placeholder="Ej: Vitamina C (sin stock)"></div>'+
+        '<div class="campo"><label>Cantidad (u.)</label><input data-cf="cant" type="number" min="0.25" step="0.25" value="1"></div>'+
+        '<div class="campo"><label>Estado</label><select data-cf="est">'+optEst+'</select></div>'+
+        '<label class="check full"><input type="checkbox" data-cf="semanal"> Repetir toda la semana (los 7 días a esta hora)</label>'+
+      '</div>'+
+      '<div class="form-actions" style="margin-top:12px"><button class="btn primario block" data-ac="celda-add" data-fecha="'+fecha+'" data-hora="'+hora+'">Agregar</button></div></div>';
+
+    return '<div class="modal-head"><div><h3>'+esc(diaLargo(fecha))+' '+esc(fmtDDMM(fecha))+'</h3><div class="m-sub">Horario '+esc(hora)+'</div></div><button class="x" data-ac="celda-cerrar">✕</button></div>'+
+      filasRows + addBox;
+  }
+  function abrirCeldaModal(fecha,hora){
+    celdaAbierta={fecha,hora};
+    let bg=$("#modalHost .modal-bg.celda"); 
+    if(!bg){ bg=document.createElement("div"); bg.className="modal-bg celda"; bg.innerHTML='<div class="modal ancho"></div>'; $("#modalHost").appendChild(bg);
+      bg.addEventListener("click",e=>{ if(e.target===bg) cerrarCeldaModal(); }); }
+    refrescarCeldaModal();
+  }
+  function refrescarCeldaModal(){ if(!celdaAbierta) return; const m=$("#modalHost .modal-bg.celda .modal"); if(m) m.innerHTML=htmlCeldaModal(celdaAbierta.fecha,celdaAbierta.hora); }
+  function cerrarCeldaModal(){ celdaAbierta=null; const bg=$("#modalHost .modal-bg.celda"); if(bg) bg.remove(); }
+
+  /* ---------- Cargar (planificador) ---------- */
+  function vistaCargar(){
+    const p=pastAct(); const cols=columnas(); const ed=state.ui.editandoToma;
+    const t=ed?state.tomas.find(x=>x.id===ed):null;
+    const catalogo=meds();
+    const optFecha=cols.map(c=>'<option value="'+c+'"'+((t?t.fecha:state.ui.diaMovil)===c?' selected':'')+'>'+diaCorto(c)+' '+fmtDDMM(c)+'</option>').join("");
+    const optMed='<option value="">— Elegí —</option>'+catalogo.map(m=>'<option value="'+esc(m.id)+'"'+(t&&t.medicamentoId===m.id?' selected':'')+'>'+esc(m.nombre)+(m.dosis?' ('+esc(m.dosis)+')':'')+'</option>').join("");
+    const optEst=state.estadosToma.map(e=>'<option value="'+esc(e.id)+'"'+((t?t.estado:'pendiente')===e.id?' selected':'')+'>'+esc(e.nombre)+'</option>').join("");
+
+    const form='<div class="panel"><h3><span class="ic">'+(t?'✏️':'➕')+'</span>'+(t?'Editar toma':'Programar una toma')+'</h3>'+
+      '<p class="hint">Elegí día y hora. Podés usar un medicamento del catálogo o escribir uno no registrado. La opción <b>Semanal</b> repite la toma los 7 días.</p>'+
+      '<div class="grid-form">'+
+        '<div class="campo"><label>Día</label><select data-f="c-fecha">'+optFecha+'</select></div>'+
+        '<div class="campo"><label>Horario</label><input data-f="c-hora" type="time" value="'+esc(t?t.hora:"08:00")+'"></div>'+
+        '<div class="campo full"><label>Medicamento registrado</label><select data-f="c-med">'+optMed+'</select></div>'+
+        '<div class="campo full"><label>… o uno no registrado</label><input data-f="c-libre" placeholder="Ej: Vitamina D" value="'+esc(t&&!t.medicamentoId?(t.nombreLibre||""):"")+'"></div>'+
+        '<div class="campo"><label>Cantidad (u.)</label><input data-f="c-cant" type="number" min="0.25" step="0.25" value="'+esc(t?t.cantidad:1)+'"></div>'+
+        '<div class="campo"><label>Estado inicial</label><select data-f="c-est">'+optEst+'</select></div>'+
+        (t?'':'<label class="check full"><input type="checkbox" data-f="c-semanal"> Semanal — repetir los 7 días de la semana</label>')+
+      '</div>'+
+      '<div class="form-actions"><button class="btn primario" data-ac="guardar-toma">'+(t?'Guardar cambios':'Agregar toma')+'</button>'+(t?'<button class="btn ghost" data-ac="cancelar-edicion-toma">Cancelar</button>':'')+'</div></div>';
+
+    const set=new Set(cols);
+    const list=tomasAct().filter(x=>set.has(x.fecha)).sort((a,b)=>{ const d=fromISO(a.fecha)-fromISO(b.fecha); return d!==0?d:hhmmMin(a.hora)-hhmmMin(b.hora); });
+    let listaHtml = !list.length ? '<div class="vacio-lista">No hay tomas en esta semana.</div>' :
+      '<div class="lista">'+list.map(x=>{
+        const est=estadoPorId(x.estado); const di=dowIndex(x.fecha);
+        return '<div class="item" style="--acc:var(--d'+di+')"><div class="barra"></div><div class="item-main">'+
+          '<div class="item-t">'+esc(nombreToma(x))+' <span class="badge-est" style="background:'+esc(est.color)+'">'+esc(est.nombre)+'</span></div>'+
+          '<div class="item-s"><span>'+esc(diaCorto(x.fecha))+' '+esc(fmtDDMM(x.fecha))+'</span><span>🕐 '+esc(x.hora)+'</span><span>💊 '+(Number(x.cantidad)||0)+' u.</span></div></div>'+
+          '<div class="item-acc"><button class="icon-btn" data-ac="editar-toma" data-id="'+esc(x.id)+'" title="Editar">✏️</button>'+
+          '<button class="icon-btn del" data-ac="borrar-toma" data-id="'+esc(x.id)+'" title="Eliminar">🗑️</button></div></div>';
+      }).join("")+'</div>';
+
+    return '<div class="vista-titulo"><h2>Carga pastillero</h2><span class="sub">'+esc(p.nombre)+' · semana '+fmtDDMM(cols[0])+' al '+fmtDDMM(cols[6])+'</span></div>'+
+      '<p class="vista-desc">Programá y administrá las tomas de la semana visible.</p>'+ form +
+      '<div class="panel"><h3><span class="ic">📋</span>Tomas de la semana <span style="color:var(--texto-tenue);font-weight:700">('+list.length+')</span></h3>'+listaHtml+'</div>';
+  }
+
+  /* ---------- Config ---------- */
+  function vistaConfig(){
+    // pastilleros
+    const pastHtml='<div class="lista">'+state.pastilleros.map(p=>{
+      const activo=p.id===state.pastilleroActivo;
+      const nM=state.medicamentos.filter(m=>m.pastilleroId===p.id).length;
+      const nT=state.tomas.filter(t=>t.pastilleroId===p.id).length;
+      return '<div class="item" style="--acc:var(--primario)"><div class="barra"></div><div class="item-main">'+
+        '<div class="item-t">N°'+(p.numero||"?")+' · '+esc(p.nombre)+' <span class="badge tipo">'+esc(p.tipo)+'</span>'+(activo?' <span class="badge normal">activo</span>':'')+'</div>'+
+        '<div class="item-s"><span>🗓️ inicia '+esc(fmtDDMM(p.fechaInicio))+'</span><span>💊 '+nM+' med.</span><span>'+nT+' tomas</span></div></div>'+
+        '<div class="item-acc">'+(activo?'':'<button class="icon-btn" data-ac="activar-past" data-id="'+esc(p.id)+'" title="Usar">✓</button>')+
+          '<button class="icon-btn" data-ac="editar-past" data-id="'+esc(p.id)+'" title="Editar">✏️</button>'+
+          (state.pastilleros.length>1?'<button class="icon-btn del" data-ac="borrar-past" data-id="'+esc(p.id)+'" title="Eliminar">🗑️</button>':'')+'</div></div>';
+    }).join("")+'</div>';
+
+    const intHtml='<div class="intervalos">'+INTERVALOS.map(i=>'<button class="'+(state.config.intervalo===i?'activo':'')+'" data-ac="set-intervalo" data-i="'+i+'">'+(i<1?'cada 30 min':'cada '+i+' h')+'</button>').join("")+'</div>';
+
+    // medicamentos
+    const em=state.ui.editandoMed; const me=em?medPorId(em):null;
+    const medForm='<div class="grid-form" style="margin-bottom:14px">'+
+      '<div class="campo"><label>Nombre</label><input data-f="m-nombre" placeholder="Ibuprofeno" value="'+esc(me?me.nombre:"")+'"></div>'+
+      '<div class="campo"><label>Droga / dosis</label><input data-f="m-dosis" placeholder="600 mg" value="'+esc(me?me.dosis:"")+'"></div>'+
+      '<div class="campo"><label>Stock (u.)</label><input data-f="m-stock" type="number" min="0" step="1" value="'+esc(me?me.stock:0)+'"></div>'+
+      '<div class="campo"><label>Stock crítico</label><input data-f="m-critico" type="number" min="0" step="1" value="'+esc(me?me.stockCritico:5)+'"></div></div>'+
+      '<div class="form-actions" style="margin-top:0"><button class="btn primario" data-ac="guardar-med">'+(me?'Guardar cambios':'Agregar medicamento')+'</button>'+(me?'<button class="btn ghost" data-ac="cancelar-edicion-med">Cancelar</button>':'')+'</div>';
+    const catalogo=meds();
+    let medLista = !catalogo.length ? '<div class="vacio-lista">Sin medicamentos en este pastillero.</div>' :
+      '<div class="lista">'+catalogo.map(m=>{
+        const n=nivelStock(m); const badge=n==="agotado"?'<span class="badge agotado">agotado</span>':n==="critico"?'<span class="badge critico">crítico</span>':'<span class="badge normal">normal</span>';
+        const acc=n==="normal"?"var(--ok)":n==="critico"?"var(--alerta)":"var(--critico)";
+        return '<div class="item" style="--acc:'+acc+'"><div class="barra"></div><div class="item-main">'+
+          '<div class="item-t">'+esc(m.nombre)+' '+badge+'</div><div class="item-s">'+(m.dosis?'<span>'+esc(m.dosis)+'</span>':'')+'<span>Stock: <span class="stock-num">'+(Number(m.stock)||0)+'</span></span><span>Crítico ≤ '+(Number(m.stockCritico)||0)+'</span></div></div>'+
+          '<div class="item-acc"><button class="icon-btn" data-ac="ir-compra" data-id="'+esc(m.id)+'" title="Registrar compra">🛒</button>'+
+          '<button class="icon-btn" data-ac="editar-med" data-id="'+esc(m.id)+'" title="Editar">✏️</button>'+
+          '<button class="icon-btn del" data-ac="borrar-med" data-id="'+esc(m.id)+'" title="Eliminar">🗑️</button></div></div>';
+      }).join("")+'</div>';
+
+    // compras
+    const optMedC='<option value="">— Elegí —</option>'+catalogo.map(m=>'<option value="'+esc(m.id)+'">'+esc(m.nombre)+'</option>').join("");
+    const compForm='<div class="grid-form" style="margin-bottom:12px">'+
+      '<div class="campo"><label>Medicamento</label><select data-f="co-med">'+optMedC+'</select></div>'+
+      '<div class="campo"><label>Cantidad comprada</label><input data-f="co-cant" type="number" min="1" step="1" value="10"></div>'+
+      '<div class="campo"><label>Precio (opcional)</label><input data-f="co-precio" type="number" min="0" step="0.01" placeholder="$"></div>'+
+      '<div class="campo"><label>Fecha</label><input data-f="co-fecha" type="date" value="'+hoyISO()+'"></div>'+
+      '<div class="campo full"><label>Nota (opcional)</label><input data-f="co-nota" placeholder="Farmacia, lote, etc."></div></div>'+
+      '<div class="form-actions" style="margin-top:0"><button class="btn primario" data-ac="registrar-compra"'+(catalogo.length?'':' disabled')+'>Registrar compra (suma stock)</button></div>';
+    const comprasAct=state.compras.filter(c=>c.pastilleroId===state.pastilleroActivo).slice().reverse().slice(0,8);
+    let compLista = !comprasAct.length ? '<div class="vacio-lista" style="margin-top:12px">Todavía no registraste compras.</div>' :
+      '<div class="lista" style="margin-top:12px">'+comprasAct.map(c=>'<div class="item"><div class="barra" style="background:var(--secundario)"></div><div class="item-main">'+
+        '<div class="item-t">'+esc(c.medNombre)+' <span class="badge normal">+'+(Number(c.cantidad)||0)+' u.</span></div>'+
+        '<div class="item-s"><span>'+esc(fmtDDMM(c.fecha))+'</span>'+(c.precio?'<span>$'+esc(c.precio)+'</span>':'')+(c.nota?'<span>'+esc(c.nota)+'</span>':'')+'</div></div></div>').join("")+'</div>';
+
+    // estados
+    const estHtml='<div class="lista">'+state.estadosToma.map(e=>'<div class="item"><span class="swatch" style="background:'+esc(e.color)+'"></span>'+
+      '<div class="item-main"><div class="item-t">'+esc(e.nombre)+'</div></div><div class="item-acc">'+
+      '<button class="icon-btn" data-ac="editar-estado" data-id="'+esc(e.id)+'" title="Editar">✏️</button>'+
+      (state.estadosToma.length>1?'<button class="icon-btn del" data-ac="borrar-estado" data-id="'+esc(e.id)+'" title="Eliminar">🗑️</button>':'')+'</div></div>').join("")+'</div>';
+
+    // registro de eliminaciones
+    const elim=state.eliminaciones.filter(x=>x.pastilleroId===state.pastilleroActivo).slice().reverse().slice(0,6);
+    const elimHtml = !elim.length ? '' : '<div class="panel"><h3><span class="ic">🧾</span>Eliminaciones registradas</h3><div class="lista">'+
+      elim.map(x=>'<div class="item"><div class="barra" style="background:var(--critico)"></div><div class="item-main"><div class="item-t">'+esc(x.medNombre)+'</div>'+
+      '<div class="item-s"><span>'+esc(x.tomaFecha?fmtDDMM(x.tomaFecha):'')+' '+esc(x.hora||'')+'</span><span>Motivo: '+esc(x.causa)+'</span></div></div></div>').join("")+'</div></div>';
+
+    return '<div class="vista-titulo"><h2>Configuración</h2></div>'+
+      '<p class="vista-desc">Recordatorios, pastilleros (plantillas), medicamentos, compras, intervalos y estados.</p>'+
+      panelRecordatorios()+
+      '<div class="panel"><h3><span class="ic">🧰</span>Pastilleros / plantillas</h3><p class="hint">Cada uno tiene número, tipo (semanal o mensual) y fecha de comienzo.</p>'+pastHtml+
+        '<div class="form-actions"><button class="btn sec" data-ac="nuevo-past">➕ Nuevo pastillero</button></div></div>'+
+      '<div class="panel"><h3><span class="ic">⏱️</span>Intervalo de la cuadrícula</h3><p class="hint">Incluye media hora.</p>'+intHtml+'</div>'+
+      '<div class="panel"><h3><span class="ic">💊</span>Medicamentos y stock</h3><p class="hint">Nombre, droga/dosis, stock y umbral crítico.</p>'+medForm+medLista+'</div>'+
+      '<div class="panel"><h3><span class="ic">🛒</span>Registro de compras</h3><p class="hint">Al registrar una compra se suma el stock y queda en el historial.</p>'+compForm+compLista+'</div>'+
+      '<div class="panel"><h3><span class="ic">🏷️</span>Estados de toma</h3><p class="hint">El estado cuyo nombre empieza con “Confirm…” es el que descuenta stock.</p>'+estHtml+
+        '<div class="form-actions"><button class="btn sec" data-ac="nuevo-estado">➕ Nuevo estado</button></div></div>'+ elimHtml;
+  }
+
+  /* ---------- Ajustes (apariencia + backup) ---------- */
+  function vistaAjustes(){
+    const c=state.config;
+    const fuentes=FUENTES.map(f=>'<button class="fuente-op'+(c.fuente===f.css?' activo':'')+'" data-ac="set-fuente" data-css="'+esc(f.css)+'" style="font-family:'+esc(f.css)+'"><div class="fn">'+esc(f.nombre)+'</div><div class="ej">Aa Toma 8:00</div></button>').join("");
+    return '<div class="vista-titulo"><h2>Ajustes</h2></div>'+
+      '<p class="vista-desc">Apariencia y respaldo de datos.</p>'+
+      '<div class="panel"><h3><span class="ic">🎨</span>Colores</h3><div class="grid-form">'+
+        '<div class="campo"><label>Color primario</label><input data-f="ap-prim" type="color" value="'+esc(c.colorPrimario)+'"></div>'+
+        '<div class="campo"><label>Color secundario</label><input data-f="ap-sec" type="color" value="'+esc(c.colorSecundario)+'"></div></div>'+
+        '<div class="preview" style="margin-top:14px"><div class="pv-head">Mi Pastillero</div><div class="pv-body"><span class="pv-dot" style="background:var(--primario)"></span><span class="pv-dot" style="background:var(--secundario)"></span><button class="btn primario mini">Botón</button><button class="btn sec mini">Secundario</button></div></div>'+
+        '<div class="form-actions"><button class="btn ghost" data-ac="reset-colores">Colores por defecto</button></div></div>'+
+      '<div class="panel"><h3><span class="ic">🔤</span>Tipografía</h3><div class="fuente-grid">'+fuentes+'</div></div>'+
+      panelInstalar()+
+      '<div class="panel"><h3><span class="ic">💾</span>Backup y restauración</h3><p class="hint">Exportá un archivo JSON con todos tus datos, o importá uno para traerlos a otro dispositivo.</p>'+
+        '<div class="form-actions"><button class="btn primario" data-ac="exportar">⬇️ Exportar backup (JSON)</button><button class="btn sec" data-ac="importar">⬆️ Importar backup</button><input type="file" id="fileImport" accept="application/json,.json" hidden></div></div>'+
+      '<div class="panel"><h3><span class="ic">⚠️</span>Zona de riesgo</h3><p class="hint">Borra todo lo guardado en este navegador. No se puede deshacer.</p>'+
+        '<div class="form-actions"><button class="btn peligro" data-ac="reset-todo">Borrar todos los datos</button></div></div>';
+  }
+
+  /* ===================== Lectura de campos ===================== */
+  const val=(f)=>{ const el=$('[data-f="'+f+'"]'); return el?el.value:""; };
+  const chk=(f)=>{ const el=$('[data-f="'+f+'"]'); return el?el.checked:false; };
+  const cval=(f)=>{ const el=$('[data-cf="'+f+'"]'); return el?el.value:""; };
+  const cchk=(f)=>{ const el=$('[data-cf="'+f+'"]'); return el?el.checked:false; };
+
+  /* ===================== Acciones de datos ===================== */
+  function crearToma(fecha,hora,medicamentoId,nombreLibre,cantidad,estado){
+    const t={id:uid(),pastilleroId:state.pastilleroActivo,fecha,hora,medicamentoId:medicamentoId||null,nombreLibre:medicamentoId?null:(nombreLibre||null),cantidad:clamp(cantidad,0.01,9999),estado,descontado:false};
+    sincronizarStock(t); state.tomas.push(t); return t;
+  }
+
+  function guardarTomaCargar(){
+    const catalogo=meds();
+    const fecha=val("c-fecha")||columnas()[0], hora=val("c-hora")||"08:00";
+    const medId=val("c-med"); const libre=val("c-libre").trim();
+    const cant=parseFloat(val("c-cant"))||0, estado=val("c-est");
+    if(!medId && !libre){ toast("Elegí un medicamento o escribí uno","alerta"); return; }
+    if(cant<=0){ toast("La cantidad debe ser mayor a 0","alerta"); return; }
+    const ed=state.ui.editandoToma;
+    if(ed){
+      const t=state.tomas.find(x=>x.id===ed);
+      if(t){ revertirStock(t); Object.assign(t,{fecha,hora,medicamentoId:medId||null,nombreLibre:medId?null:(libre||null),cantidad:cant,estado}); sincronizarStock(t); }
+      state.ui.editandoToma=null; toast("Toma actualizada","ok");
+    } else {
+      if(chk("c-semanal")){ columnas().forEach(c=>crearToma(c,hora,medId,libre,cant,estado)); toast("Toma semanal agregada (7 días)","ok"); }
+      else { crearToma(fecha,hora,medId,libre,cant,estado); toast("Toma agregada","ok"); }
+    }
+    guardar(); render();
+  }
+
+  function guardarMed(){
+    const nombre=val("m-nombre").trim(); if(!nombre){ toast("Poné un nombre","alerta"); return; }
+    const dosis=val("m-dosis").trim();
+    const stock=clamp(parseInt(val("m-stock"),10)||0,0,999999), critico=clamp(parseInt(val("m-critico"),10)||0,0,999999);
+    const ed=state.ui.editandoMed;
+    if(ed){ const m=medPorId(ed); if(m) Object.assign(m,{nombre,dosis,stock,stockCritico:critico}); state.ui.editandoMed=null; toast("Medicamento actualizado","ok"); }
+    else { state.medicamentos.push({id:uid(),pastilleroId:state.pastilleroActivo,nombre,dosis,stock,stockCritico:critico}); toast("Medicamento agregado","ok"); }
+    guardar(); render();
+  }
+
+  function registrarCompra(){
+    const medId=val("co-med"); const m=medPorId(medId);
+    if(!m){ toast("Elegí un medicamento","alerta"); return; }
+    const cant=parseInt(val("co-cant"),10)||0; if(cant<=0){ toast("La cantidad debe ser mayor a 0","alerta"); return; }
+    const precio=val("co-precio").trim(); const fecha=val("co-fecha")||hoyISO(); const nota=val("co-nota").trim();
+    m.stock=(Number(m.stock)||0)+cant;
+    state.compras.push({id:uid(),pastilleroId:state.pastilleroActivo,medicamentoId:medId,medNombre:m.nombre,cantidad:cant,precio:precio||null,fecha,nota:nota||null});
+    guardar(); render(); toast("Compra registrada (+"+cant+" u.)","ok");
+  }
+
+  function clonarPastillero(){
+    const p=pastAct(); const cols=columnas();
+    const nuevoInicio=addDays(cols[0],7);
+    const nid=uid(); const num=(++state.contadorPastillero);
+    state.pastilleros.push({id:nid,numero:num,nombre:p.nombre.replace(/\s*\(copia.*\)$/,'')+" (copia)",tipo:p.tipo,fechaInicio:nuevoInicio,creado:hoyISO()});
+    // copio catálogo de medicamentos (mismo stock actual)
+    const mapa={};
+    state.medicamentos.filter(m=>m.pastilleroId===p.id).forEach(m=>{ const nm={id:uid(),pastilleroId:nid,nombre:m.nombre,dosis:m.dosis,stock:m.stock,stockCritico:m.stockCritico}; mapa[m.id]=nm.id; state.medicamentos.push(nm); });
+    // copio SOLO tomas registradas de la semana, en Pendiente y +7 días
+    const set=new Set(cols); const pend=state.estadosToma.find(e=>e.nombre.toLowerCase().startsWith("pend"))||state.estadosToma[0];
+    let n=0;
+    state.tomas.filter(t=>t.pastilleroId===p.id && set.has(t.fecha) && t.medicamentoId && mapa[t.medicamentoId]).forEach(t=>{
+      state.tomas.push({id:uid(),pastilleroId:nid,fecha:addDays(t.fecha,7),hora:t.hora,medicamentoId:mapa[t.medicamentoId],nombreLibre:null,cantidad:t.cantidad,estado:pend.id,descontado:false}); n++;
+    });
+    state.pastilleroActivo=nid; state.ui.semanaOffset=0; state.ui.diaMovil=nuevoInicio;
+    guardar(); render(); toast("Pastillero N°"+num+" creado con "+n+" tomas pendientes","ok");
+  }
+
+  /* ===================== Import / Export ===================== */
+  function exportar(){
+    const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob); const a=document.createElement("a");
+    a.href=url; a.download="mi-pastillero-"+hoyISO()+".json"; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000); toast("Backup exportado","ok");
+  }
+  function importar(file){
+    const r=new FileReader();
+    r.onload=()=>{ try{
+      let data=JSON.parse(r.result); if(!data||!Array.isArray(data.pastilleros)) throw 0;
+      data=migrar(data); const base=estadoInicial();
+      data.config=Object.assign(base.config,data.config||{}); data.ui=Object.assign(base.ui,data.ui||{});
+      if(!Array.isArray(data.estadosToma)||!data.estadosToma.length) data.estadosToma=base.estadosToma;
+      if(!data.pastilleros.some(p=>p.id===data.pastilleroActivo)) data.pastilleroActivo=data.pastilleros[0].id;
+      data.medicamentos=data.medicamentos||[]; data.tomas=data.tomas||[]; data.compras=data.compras||[]; data.eliminaciones=data.eliminaciones||[];
+      state=data; guardar(); render(); toast("Backup importado","ok");
+    }catch(e){ toast("El archivo no es un backup válido","error"); } };
+    r.readAsText(file);
+  }
+
+  /* ===================== Avisos con la app abierta ===================== */
+  let audioCtx=null, deferredPrompt=null, schedulerId=null, _iconCache={};
+  let avisadas = cargarAvisadas();
+
+  function cargarAvisadas(){ try{ return JSON.parse(localStorage.getItem("miPastillero.avisadas")||"{}"); }catch(e){ return {}; } }
+  function guardarAvisadas(){ try{ localStorage.setItem("miPastillero.avisadas", JSON.stringify(avisadas)); }catch(e){} }
+  function podarAvisadas(){ const hoy=hoyISO(); const vivos={}; state.tomas.forEach(t=>{ if(avisadas[t.id] && t.fecha===hoy) vivos[t.id]=true; }); avisadas=vivos; guardarAvisadas(); }
+
+  const soportaAvisos = () => (typeof Notification!=="undefined");
+  const permisoAvisos = () => soportaAvisos()? Notification.permission : "unsupported";
+
+  function iniciarAudio(){ try{ if(!audioCtx){ const AC=window.AudioContext||window.webkitAudioContext; if(AC) audioCtx=new AC(); } if(audioCtx && audioCtx.state==="suspended") audioCtx.resume(); }catch(e){} }
+  function beep(){
+    if(!state.config.avisos || !state.config.avisos.sonido) return;
+    try{ iniciarAudio(); if(!audioCtx) return; const t0=audioCtx.currentTime;
+      [0,0.18].forEach((off,i)=>{ const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+        o.type="sine"; o.frequency.value = i===0?880:1175;
+        g.gain.setValueAtTime(0.0001, t0+off); g.gain.exponentialRampToValueAtTime(0.25, t0+off+0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0+off+0.16);
+        o.connect(g); g.connect(audioCtx.destination); o.start(t0+off); o.stop(t0+off+0.18); });
+    }catch(e){}
+  }
+
+  async function activarAvisos(){
+    if(!soportaAvisos()){ toast("Este navegador no soporta notificaciones","alerta"); return; }
+    iniciarAudio();
+    let p=Notification.permission;
+    if(p==="default"){ try{ p=await Notification.requestPermission(); }catch(e){ p=Notification.permission; } }
+    if(p==="granted"){ state.config.avisos.activos=true; guardar(); render(); toast("Avisos activados","ok"); beep(); chequearAvisos(); }
+    else if(p==="denied"){ state.config.avisos.activos=false; guardar(); render(); toast("El navegador bloqueó las notificaciones","alerta"); }
+    else { render(); }
+  }
+  function desactivarAvisos(){ state.config.avisos.activos=false; guardar(); render(); toast("Avisos desactivados"); }
+
+  const textoTomasHora = (tomas) => tomas.map(t=>{ const c=Number(t.cantidad)||0; return nombreToma(t)+(c?" ("+c+"u)":""); }).join(", ");
+
+  function dispararAviso(hora, tomas){
+    try{ const n=new Notification("💊 Hora de tu toma", { body:hora+" · "+textoTomasHora(tomas), tag:"pastillero-"+hora, icon:iconoCache(192), badge:iconoCache(192), renotify:true });
+      n.onclick=()=>{ try{ window.focus(); }catch(e){} state.ui.vista="registrar"; render(); try{ n.close(); }catch(e){} }; }catch(e){}
+    beep();
+    tomas.forEach(t=>{ avisadas[t.id]=true; }); guardarAvisadas();
+  }
+  function chequearAvisos(){
+    if(!state.config.avisos || !state.config.avisos.activos) return;
+    if(permisoAvisos()!=="granted") return;
+    const hoy=hoyISO(); const ahora=new Date(); const minAhora=ahora.getHours()*60+ahora.getMinutes();
+    const ante=Number(state.config.avisos.antelacion)||0; const GRACIA=180;
+    const pend=state.tomas.filter(t=>t.fecha===hoy && !esCancelado(t) && !esConfirmado(t) && !avisadas[t.id]);
+    const porHora={};
+    pend.forEach(t=>{ const objetivo=hhmmMin(t.hora)-ante; const atraso=minAhora-hhmmMin(t.hora);
+      if(minAhora>=objetivo && atraso<=GRACIA){ (porHora[t.hora]=porHora[t.hora]||[]).push(t); } });
+    Object.keys(porHora).sort((a,b)=>hhmmMin(a)-hhmmMin(b)).forEach(h=>dispararAviso(h, porHora[h]));
+  }
+
+  /* ===================== PWA (instalable) ===================== */
+  function iconoDataURL(size){
+    try{
+      const c=document.createElement("canvas"); c.width=c.height=size; const x=c.getContext("2d"); if(!x) return "";
+      const g=x.createLinearGradient(0,0,size,size); g.addColorStop(0, state.config.colorPrimario); g.addColorStop(1, "#1f5d4f");
+      const r=size*0.22; x.fillStyle=g; x.beginPath(); x.moveTo(r,0); x.arcTo(size,0,size,size,r); x.arcTo(size,size,0,size,r); x.arcTo(0,size,0,0,r); x.arcTo(0,0,size,0,r); x.closePath(); x.fill();
+      x.fillStyle="rgba(255,255,255,.95)"; const w=size*0.16, l=size*0.46, cx=size/2, cy=size/2;
+      x.fillRect(cx-l/2, cy-w/2, l, w); x.fillRect(cx-w/2, cy-l/2, w, l);
+      return c.toDataURL("image/png");
+    }catch(e){ return ""; }
+  }
+  const iconoCache = (size) => { if(!_iconCache[size]) _iconCache[size]=iconoDataURL(size); return _iconCache[size]; };
+  function construirPWA(){
+    try{
+      _iconCache={}; const i192=iconoCache(192), i512=iconoCache(512);
+      const setLink=(rel,href)=>{ let l=document.querySelector('link[rel="'+rel+'"]'); if(!l){ l=document.createElement("link"); l.rel=rel; document.head.appendChild(l);} if(href) l.href=href; return l; };
+      if(i192){ setLink("apple-touch-icon", i192); setLink("icon", i192); }
+      const manifest={ name:"Mi Pastillero", short_name:"Pastillero", start_url:".", scope:".", display:"standalone",
+        background_color:"#F6F4EF", theme_color:state.config.colorPrimario, description:"Gestión de tomas de medicación",
+        icons: i192 ? [ {src:i192,sizes:"192x192",type:"image/png",purpose:"any maskable"}, {src:i512,sizes:"512x512",type:"image/png",purpose:"any maskable"} ] : [] };
+      const url=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:"application/manifest+json"}));
+      setLink("manifest", url);
+      const tc=document.querySelector('meta[name="theme-color"]'); if(tc) tc.content=state.config.colorPrimario;
+    }catch(e){}
+  }
+
+  /* ===================== Paneles (avisos e instalación) ===================== */
+  function panelRecordatorios(){
+    if(!soportaAvisos()) return '<div class="panel"><h3><span class="ic">🔔</span>Recordatorios de toma</h3><p class="hint">Este navegador no soporta notificaciones. Abrí la app desde Chrome (Android) o Safari (iPhone) por HTTPS.</p></div>';
+    const av=state.config.avisos, perm=permisoAvisos(); let estado, accion;
+    if(av.activos && perm==="granted"){ estado='<span class="badge normal">activos</span>'; accion='<button class="btn ghost" data-ac="desactivar-avisos">Desactivar</button><button class="btn sec" data-ac="probar-aviso">Probar aviso</button>'; }
+    else if(perm==="denied"){ estado='<span class="badge agotado">bloqueados</span>'; accion='<button class="btn ghost" data-ac="ayuda-permiso">¿Cómo desbloquear?</button>'; }
+    else { estado='<span class="badge critico">apagados</span>'; accion='<button class="btn primario" data-ac="activar-avisos">🔔 Activar avisos</button>'; }
+    const ante=[0,5,10,15,30].map(m=>'<button class="'+((Number(av.antelacion)||0)===m?'activo':'')+'" data-ac="set-antelacion" data-min="'+m+'">'+(m===0?'A la hora':m+' min antes')+'</button>').join("");
+    const extra = (av.activos && perm==="granted")
+      ? '<label class="check" style="margin-top:14px"><input type="checkbox" data-ac="toggle-sonido"'+(av.sonido?' checked':'')+'> Sonido al avisar</label>'+
+        '<div style="margin-top:12px"><label style="font-weight:700;font-size:.82rem;color:var(--texto-suave);display:block;margin-bottom:6px">Antelación</label><div class="intervalos">'+ante+'</div></div>'
+      : '';
+    return '<div class="panel"><h3><span class="ic">🔔</span>Recordatorios de toma '+estado+'</h3>'+
+      '<p class="hint">Con la app abierta en el celular te avisa con una notificación del sistema y un sonido cuando llega el horario de una toma pendiente.</p>'+
+      '<div class="form-actions" style="margin-top:0">'+accion+'</div>'+ extra +
+      '<p class="hint" style="margin-top:14px;margin-bottom:0">⚠️ Funciona mientras la app esté abierta (aunque sea en segundo plano). Para avisos con el celular bloqueado o la app cerrada, conviene sumar Google Calendar o WhatsApp.</p></div>';
+  }
+  function panelInstalar(){
+    return '<div class="panel"><h3><span class="ic">📲</span>Instalar como app</h3><p class="hint">Instalala para abrirla como una app, con su ícono en la pantalla de inicio. Recomendado para que los recordatorios anden mejor.</p>'+
+      '<div class="form-actions" style="margin-top:0"><button class="btn primario" data-ac="instalar-app">📲 Instalar app</button></div>'+
+      '<p class="hint" style="margin-top:12px;margin-bottom:0">En <b>Android/Chrome</b>: si no aparece el diálogo, menú ⋮ → “Instalar app”. En <b>iPhone/Safari</b>: botón Compartir → “Agregar a inicio”.</p></div>';
+  }
+
+  /* ===================== Delegación de eventos ===================== */
+  document.addEventListener("click", async (e)=>{
+    const btn=e.target.closest("[data-ac]"); if(!btn) return;
+    const ac=btn.dataset.ac, id=btn.dataset.id;
+    switch(ac){
+      case "tab": state.ui.vista=btn.dataset.k; state.ui.editandoToma=null; state.ui.editandoMed=null; render(); break;
+      case "sem": state.ui.semanaOffset=(state.ui.semanaOffset||0)+parseInt(btn.dataset.d,10); guardar(); render(); break;
+      case "ver-todo": state.ui.verTodo=!state.ui.verTodo; guardar(); render(); break;
+      case "dia-movil": state.ui.diaMovil=btn.dataset.fecha; guardar(); render(); break;
+
+      case "celda": abrirCeldaModal(btn.dataset.fecha, btn.dataset.hora); break;
+      case "celda-cerrar": cerrarCeldaModal(); break;
+      case "celda-add": {
+        const medId=cval("med"), libre=cval("libre").trim(), cant=parseFloat(cval("cant"))||0, est=cval("est");
+        if(!medId && !libre){ toast("Elegí o escribí un medicamento","alerta"); break; }
+        if(cant<=0){ toast("Cantidad inválida","alerta"); break; }
+        if(cchk("semanal")){ columnas().forEach(c=>crearToma(c,btn.dataset.hora,medId,libre,cant,est)); toast("Agregado a los 7 días","ok"); }
+        else { crearToma(btn.dataset.fecha,btn.dataset.hora,medId,libre,cant,est); toast("Medicamento agregado","ok"); }
+        guardar(); refrescarCeldaModal(); render(); break;
+      }
+      case "celda-del": {
+        const t=state.tomas.find(x=>x.id===id); if(!t) break;
+        const r=await modal({titulo:"Eliminar medicamento",mensaje:"Indicá el motivo de la eliminación (obligatorio).",campos:[{key:"causa",label:"Motivo",tipo:"textarea",ph:"Ej: cambio de dosis, error de carga, suspendido por el médico…"}],confirmar:"Eliminar",peligro:true});
+        if(r){ const causa=(r.causa||"").trim(); if(!causa){ toast("El motivo es obligatorio","alerta"); break; }
+          revertirStock(t);
+          state.eliminaciones.push({id:uid(),fecha:hoyISO(),pastilleroId:t.pastilleroId,medNombre:nombreToma(t),tomaFecha:t.fecha,hora:t.hora,causa});
+          state.tomas=state.tomas.filter(x=>x.id!==id);
+          guardar(); refrescarCeldaModal(); render(); toast("Eliminado y registrado");
+        } break;
+      }
+
+      case "agregar-toma": {
+        const cols=columnas();
+        const r=await modal({titulo:"Agregar toma",campos:[
+          {key:"fecha",label:"Día",tipo:"select",valor:(cols.includes(state.ui.diaMovil)?state.ui.diaMovil:cols[0]),opciones:cols.map(c=>({value:c,label:diaCorto(c)+" "+fmtDDMM(c)}))},
+          {key:"hora",label:"Horario",tipo:"time",valor:"08:00"}
+        ],confirmar:"Continuar"});
+        if(r) abrirCeldaModal(r.fecha, r.hora);
+        break;
+      }
+
+      case "clonar-past": if(await confirmar("Crear pastillero siguiente","Se crea una copia con los medicamentos registrados en estado Pendiente, para la semana que viene.")) clonarPastillero(); break;
+
+      case "ir-compra": state.ui.vista="config"; render(); setTimeout(()=>{ const s=$('[data-f="co-med"]'); if(s){ s.value=id; s.focus(); s.scrollIntoView({behavior:"smooth",block:"center"});} },70); break;
+
+      /* Cargar */
+      case "guardar-toma": guardarTomaCargar(); break;
+      case "cancelar-edicion-toma": state.ui.editandoToma=null; render(); break;
+      case "editar-toma": state.ui.editandoToma=id; state.ui.vista="cargar"; render(); break;
+      case "borrar-toma": {
+        const t=state.tomas.find(x=>x.id===id); if(!t) break;
+        const r=await modal({titulo:"Eliminar toma",mensaje:"Indicá el motivo (obligatorio).",campos:[{key:"causa",label:"Motivo",tipo:"textarea",ph:"Motivo de la eliminación…"}],confirmar:"Eliminar",peligro:true});
+        if(r){ const causa=(r.causa||"").trim(); if(!causa){ toast("El motivo es obligatorio","alerta"); break; }
+          revertirStock(t); state.eliminaciones.push({id:uid(),fecha:hoyISO(),pastilleroId:t.pastilleroId,medNombre:nombreToma(t),tomaFecha:t.fecha,hora:t.hora,causa});
+          state.tomas=state.tomas.filter(x=>x.id!==id); guardar(); render(); toast("Toma eliminada");
+        } break;
+      }
+
+      /* Config: pastilleros */
+      case "nuevo-past": {
+        const r=await modal({titulo:"Nuevo pastillero",campos:[
+          {key:"nombre",label:"Nombre",ph:"Viajes",valor:""},
+          {key:"tipo",label:"Tipo",tipo:"select",valor:"semanal",opciones:[{value:"semanal",label:"Semanal"},{value:"mensual",label:"Mensual"}]},
+          {key:"fechaInicio",label:"Día de comienzo",tipo:"date",valor:hoyISO()}
+        ],confirmar:"Crear"});
+        if(r && r.nombre.trim()){ const num=(++state.contadorPastillero); const np={id:uid(),numero:num,nombre:r.nombre.trim(),tipo:r.tipo,fechaInicio:r.fechaInicio||hoyISO(),creado:hoyISO()}; state.pastilleros.push(np); state.pastilleroActivo=np.id; state.ui.semanaOffset=0; state.ui.diaMovil=np.fechaInicio; guardar(); render(); toast("Pastillero N°"+num+" creado","ok"); }
+        break;
+      }
+      case "activar-past": state.pastilleroActivo=id; state.ui.semanaOffset=0; state.ui.diaMovil=pastAct().fechaInicio; guardar(); render(); break;
+      case "editar-past": {
+        const p=state.pastilleros.find(x=>x.id===id); if(!p) break;
+        const r=await modal({titulo:"Editar pastillero",campos:[
+          {key:"nombre",label:"Nombre",valor:p.nombre},
+          {key:"tipo",label:"Tipo",tipo:"select",valor:p.tipo,opciones:[{value:"semanal",label:"Semanal"},{value:"mensual",label:"Mensual"}]},
+          {key:"fechaInicio",label:"Día de comienzo",tipo:"date",valor:p.fechaInicio}
+        ],confirmar:"Guardar"});
+        if(r && r.nombre.trim()){ p.nombre=r.nombre.trim(); p.tipo=r.tipo; p.fechaInicio=r.fechaInicio||p.fechaInicio; if(p.id===state.pastilleroActivo){ state.ui.semanaOffset=0; state.ui.diaMovil=p.fechaInicio; } guardar(); render(); toast("Pastillero actualizado","ok"); }
+        break;
+      }
+      case "borrar-past": {
+        const p=state.pastilleros.find(x=>x.id===id); if(!p) break;
+        if(await confirmar("Eliminar pastillero",'Se borran "'+p.nombre+'" y todos sus medicamentos, tomas y compras.',true)){
+          state.medicamentos=state.medicamentos.filter(m=>m.pastilleroId!==id);
+          state.tomas=state.tomas.filter(t=>t.pastilleroId!==id);
+          state.compras=state.compras.filter(c=>c.pastilleroId!==id);
+          state.pastilleros=state.pastilleros.filter(x=>x.id!==id);
+          if(state.pastilleroActivo===id){ state.pastilleroActivo=state.pastilleros[0].id; state.ui.semanaOffset=0; state.ui.diaMovil=pastAct().fechaInicio; }
+          guardar(); render(); toast("Pastillero eliminado");
+        } break;
+      }
+
+      case "set-intervalo": state.config.intervalo=parseFloat(btn.dataset.i); guardar(); render(); break;
+
+      /* Config: medicamentos */
+      case "guardar-med": guardarMed(); break;
+      case "cancelar-edicion-med": state.ui.editandoMed=null; render(); break;
+      case "editar-med": state.ui.editandoMed=id; render(); setTimeout(()=>{const el=$('[data-f="m-nombre"]'); if(el){el.focus(); el.scrollIntoView({behavior:"smooth",block:"center"});}},60); break;
+      case "borrar-med": {
+        const m=medPorId(id); if(!m) break;
+        const usos=state.tomas.filter(t=>t.medicamentoId===id).length;
+        const msg=usos?'Hay '+usos+' toma(s) con este medicamento; también se eliminarán.':"¿Eliminar este medicamento?";
+        if(await confirmar("Eliminar "+m.nombre,msg,true)){
+          state.tomas=state.tomas.filter(t=>t.medicamentoId!==id);
+          state.medicamentos=state.medicamentos.filter(x=>x.id!==id);
+          if(state.ui.editandoMed===id) state.ui.editandoMed=null;
+          guardar(); render(); toast("Medicamento eliminado");
+        } break;
+      }
+
+      /* Config: compras */
+      case "registrar-compra": registrarCompra(); break;
+
+      /* Config: estados */
+      case "nuevo-estado": { const r=await modal({titulo:"Nuevo estado",campos:[{key:"nombre",label:"Nombre",ph:"Pospuesto",valor:""},{key:"color",label:"Color",tipo:"color",valor:"#8B7BD8"}],confirmar:"Crear"}); if(r&&r.nombre.trim()){ state.estadosToma.push({id:uid(),nombre:r.nombre.trim(),color:r.color}); guardar(); render(); toast("Estado creado","ok"); } break; }
+      case "editar-estado": { const es=state.estadosToma.find(x=>x.id===id); if(!es) break; const r=await modal({titulo:"Editar estado",campos:[{key:"nombre",label:"Nombre",valor:es.nombre},{key:"color",label:"Color",tipo:"color",valor:es.color}],confirmar:"Guardar"}); if(r&&r.nombre.trim()){ es.nombre=r.nombre.trim(); es.color=r.color; guardar(); render(); toast("Estado actualizado","ok"); } break; }
+      case "borrar-estado": { const usos=state.tomas.filter(t=>t.estado===id).length; if(usos){ toast("No se puede: "+usos+" toma(s) usan ese estado","alerta"); break; } if(await confirmar("Eliminar estado","¿Eliminar este estado?",true)){ state.estadosToma=state.estadosToma.filter(x=>x.id!==id); guardar(); render(); toast("Estado eliminado"); } break; }
+
+      /* Ajustes */
+      case "set-fuente": state.config.fuente=btn.dataset.css; guardar(); render(); break;
+      case "reset-colores": state.config.colorPrimario="#2E7D6B"; state.config.colorSecundario="#E0A458"; guardar(); render(); toast("Colores restablecidos","ok"); break;
+      case "exportar": exportar(); break;
+      case "importar": $("#fileImport").click(); break;
+
+      /* Recordatorios */
+      case "activar-avisos": await activarAvisos(); break;
+      case "desactivar-avisos": desactivarAvisos(); break;
+      case "toggle-sonido": state.config.avisos.sonido=!state.config.avisos.sonido; guardar(); render(); if(state.config.avisos.sonido){ iniciarAudio(); beep(); } break;
+      case "set-antelacion": state.config.avisos.antelacion=parseInt(btn.dataset.min,10)||0; guardar(); render(); toast("Antelación actualizada","ok"); break;
+      case "probar-aviso": {
+        if(!soportaAvisos()){ toast("Sin soporte de notificaciones","alerta"); break; }
+        iniciarAudio();
+        if(permisoAvisos()!=="granted"){ toast("Activá los avisos primero","alerta"); beep(); break; }
+        try{ const n=new Notification("💊 Mi Pastillero", {body:"Así vas a ver tus recordatorios de toma.", icon:iconoCache(192)}); n.onclick=()=>{ try{ window.focus(); }catch(e){} try{ n.close(); }catch(e){} }; }catch(e){}
+        beep(); toast("Aviso de prueba enviado","ok"); break;
+      }
+      case "ayuda-permiso": await modal({titulo:"Notificaciones bloqueadas",mensaje:"Están bloqueadas para este sitio. Tocá el candado o la ⓘ junto a la dirección → Notificaciones → Permitir, y recargá. En iPhone, primero agregá la app a la pantalla de inicio.",cancelar:"",confirmar:"Entendido"}); break;
+      case "instalar-app":
+        if(deferredPrompt){ try{ deferredPrompt.prompt(); await deferredPrompt.userChoice; }catch(e){} deferredPrompt=null; }
+        else { await modal({titulo:"Instalar la app",mensaje:"En Android/Chrome: menú ⋮ → “Instalar app” o “Agregar a pantalla principal”. En iPhone/Safari: botón Compartir → “Agregar a inicio”.",cancelar:"",confirmar:"Entendido"}); }
+        break;
+      case "reset-todo": if(await confirmar("Borrar todos los datos","Se eliminan pastilleros, medicamentos, tomas, compras y ajustes de este navegador. No se puede deshacer.",true)){ localStorage.removeItem(LS_KEY); localStorage.removeItem("miPastillero.v1"); state=estadoInicial(); guardar(); render(); toast("Todo borrado. Empezás de cero."); } break;
+    }
+  });
+
+  // cambio de estado dentro del modal de celda
+  document.addEventListener("change",(e)=>{
+    const s=e.target.closest('[data-cf="estado"]');
+    if(s){ const t=state.tomas.find(x=>x.id===s.dataset.id); if(t){ revertirStock(t); t.estado=s.value; sincronizarStock(t); guardar(); refrescarCeldaModal(); render();
+        const m=t.medicamentoId?medPorId(t.medicamentoId):null; if(esConfirmado(t)&&m&&nivelStock(m)!=="normal") toast("¡Ojo! "+m.nombre+" quedó "+nivelStock(m),"alerta"); } return; }
+    if(e.target.id==="selPastillero"){ state.pastilleroActivo=e.target.value; state.ui.editandoMed=null; state.ui.editandoToma=null; state.ui.semanaOffset=0; state.ui.diaMovil=pastAct().fechaInicio; guardar(); render(); }
+    if(e.target.id==="fileImport"){ const f=e.target.files[0]; if(f) importar(f); e.target.value=""; }
+  });
+
+  // colores en vivo
+  document.addEventListener("input",(e)=>{
+    const el=e.target.closest("[data-f]"); if(!el) return;
+    if(el.dataset.f==="ap-prim"){ state.config.colorPrimario=el.value; aplicarTema(); guardar(); }
+    else if(el.dataset.f==="ap-sec"){ state.config.colorSecundario=el.value; aplicarTema(); guardar(); }
+  });
+
+  /* ===================== Arranque ===================== */
+  window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); deferredPrompt=e; });
+  window.addEventListener("appinstalled",()=>{ deferredPrompt=null; toast("App instalada","ok"); });
+  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") chequearAvisos(); });
+
+  aplicarTema();
+  construirPWA();
+  podarAvisadas();
+  render();
+  schedulerId=setInterval(chequearAvisos, 30000);
+  setTimeout(chequearAvisos, 1500);
+})();
+</script>
+</body>
+</html>
