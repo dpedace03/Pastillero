@@ -137,6 +137,45 @@
   .mob-vacio{background:var(--superficie);border:1px dashed var(--borde-fuerte);border-radius:var(--r);padding:24px 16px;text-align:center;color:var(--texto-suave)}
   .mob-vacio .em{font-size:1.6rem;display:block;margin-bottom:6px}
 
+  /* Móvil: grilla de días grandes */
+  .dias-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
+  .dia-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:clamp(106px,15.5vh,168px);padding:14px;border-radius:18px;border:1.5px solid var(--borde);background:var(--superficie);box-shadow:var(--sombra-sm);text-align:left;overflow:hidden;transition:transform .08s}
+  .dia-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--dc)}
+  .dia-card:active{transform:scale(.98)}
+  .dia-card.pend{background:var(--pastel-pend-bg);border-color:var(--pastel-pend-bd)}
+  .dia-card.ok{background:var(--pastel-ok-bg);border-color:var(--pastel-ok-bd)}
+  .dia-card.hoy{outline:2.5px solid var(--secundario);outline-offset:-2.5px}
+  .dia-card.full{grid-column:1 / -1;min-height:auto;flex-direction:row;align-items:center;gap:12px}
+  .dc-top{display:flex;align-items:center;gap:6px;width:100%}
+  .dc-dot{width:12px;height:12px;border-radius:50%;background:var(--dc);flex:0 0 auto}
+  .dc-hoy{margin-left:auto;font-size:.62rem;font-weight:800;letter-spacing:.05em;background:var(--secundario);color:#fff;padding:2px 8px;border-radius:999px}
+  .dc-dia{font-size:1.65rem;font-weight:800;line-height:1;letter-spacing:-.02em}
+  .dc-fch{font-size:.85rem;font-weight:700;color:var(--texto-suave);font-variant-numeric:tabular-nums}
+  .dc-info{font-size:.72rem;font-weight:800;color:var(--texto-suave);margin-top:auto;background:color-mix(in srgb,var(--texto) 7%,transparent);padding:3px 9px;border-radius:999px}
+  .dia-card.full .dc-top{width:auto}
+  .dia-card.full .dc-dia{font-size:1.3rem}
+  .dia-card.full .dc-info{margin-top:0;margin-left:auto}
+
+  /* Móvil: detalle del día */
+  .dd-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .dd-back{width:44px;height:44px;border-radius:13px;border:1.5px solid var(--borde-fuerte);background:var(--superficie);font-size:1.5rem;color:var(--texto);flex:0 0 auto;line-height:1;box-shadow:var(--sombra-sm)}
+  .dd-back:active{transform:scale(.96)}
+  .dd-title{font-size:1.3rem;font-weight:800;display:flex;align-items:center;gap:9px}
+  .dd-dot{width:14px;height:14px;border-radius:50%;flex:0 0 auto}
+  .dd-fch{font-size:.9rem;font-weight:700;color:var(--texto-suave);font-variant-numeric:tabular-nums}
+  .hora-card{display:block;width:100%;text-align:left;border:1.5px solid var(--borde);border-left-width:6px;border-radius:16px;padding:14px;margin-bottom:12px;background:var(--superficie);box-shadow:var(--sombra-sm);transition:transform .08s}
+  .hora-card:active{transform:scale(.99)}
+  .hora-card.pend{border-left-color:var(--pastel-pend-bd);background:color-mix(in srgb,var(--pastel-pend-bg) 50%,var(--superficie))}
+  .hora-card.ok{border-left-color:var(--pastel-ok-bd);background:color-mix(in srgb,var(--pastel-ok-bg) 50%,var(--superficie))}
+  .hora-card.neutro{border-left-color:var(--borde-fuerte)}
+  .hc-hora{font-weight:800;font-size:1.05rem;margin-bottom:8px;font-variant-numeric:tabular-nums}
+  .hc-meds{display:flex;flex-direction:column;gap:8px}
+  .hc-med{display:flex;align-items:center;gap:9px}
+  .hc-badge{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
+  .hc-nombre{font-weight:700;font-size:1rem;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hc-cant{font-size:.8rem;font-weight:800;color:var(--texto-suave);background:color-mix(in srgb,var(--texto) 7%,transparent);padding:2px 10px;border-radius:999px;flex:0 0 auto}
+  .hc-vacio{color:var(--texto-tenue);font-size:.92rem}
+
   .panel{background:var(--superficie);border:1px solid var(--borde);border-radius:var(--r);box-shadow:var(--sombra);padding:18px;margin-bottom:16px}
   .panel h3{font-size:1rem;margin-bottom:4px;display:flex;align-items:center;gap:8px}
   .panel h3 .ic{font-size:1.05rem}
@@ -245,6 +284,9 @@
     .bottom-nav{display:grid}
     #toasts{bottom:calc(78px + env(safe-area-inset-bottom))}
     .grid-scroll{display:none}
+    .reg-desktop{display:none}
+    .desc-registrar{display:none}
+    .vista-titulo{margin-bottom:6px}
     .dias-nav{display:flex}
     .grid-form{grid-template-columns:1fr}
     .pastillero-sel select{max-width:150px}
@@ -299,6 +341,7 @@
   const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
   const esc = (s) => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const clamp = (n,mn,mx) => Math.max(mn, Math.min(mx, n));
+  const fmtNum = (n) => { const r=Math.round((Number(n)||0)*100)/100; return Number.isInteger(r)?String(r):String(r); };
 
   const isoDe = (d) => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
   const hoyISO = () => isoDe(new Date());
@@ -337,7 +380,7 @@
         {id:"cancelado",  nombre:"Cancelado",  color:"#9AA29C"}
       ],
       config:{ intervalo:8, colorPrimario:"#2E7D6B", colorSecundario:"#E0A458", fuente:"'Nunito', system-ui, sans-serif", avisos:{activos:false, sonido:true, antelacion:0} },
-      ui:{ vista:"registrar", semanaOffset:0, verTodo:false, diaMovil:hoyISO(), editandoToma:null, editandoMed:null }
+      ui:{ vista:"registrar", semanaOffset:0, verTodo:false, diaMovil:null, editandoToma:null, editandoMed:null }
     };
   }
 
@@ -358,6 +401,7 @@
       if(!Array.isArray(s.pastilleros)||!s.pastilleros.length){ s.pastilleros=base.pastilleros; s.pastilleroActivo=base.pastilleroActivo; }
       if(!s.pastilleros.some(p=>p.id===s.pastilleroActivo)) s.pastilleroActivo=s.pastilleros[0].id;
       s.medicamentos = s.medicamentos||[];
+      s.medicamentos.forEach(m=>{ if(m.pastillasPorCaja==null||m.pastillasPorCaja<1) m.pastillasPorCaja=1; });
       s.tomas = s.tomas||[];
       s.compras = s.compras||[];
       s.eliminaciones = s.eliminaciones||[];
@@ -504,12 +548,18 @@
     return '<div class="toma-blk '+clase+'">Toma'+(n>1?'<span class="cnt">'+n+' medicamentos</span>':'')+'</div>';
   }
 
+  function estadoDia(iso){
+    const list=tomasEnFecha(iso); const activas=list.filter(t=>!esCancelado(t));
+    let clase="neutro"; if(activas.length){ clase=activas.every(esConfirmado)?"ok":"pend"; }
+    return {n:list.length, clase:clase};
+  }
+
   function vistaRegistrar(){
     const p=pastAct(); const filas=horasDeIntervalo(state.config.intervalo); const cols=columnas(); const hoy=hoyISO();
     const filasVis = state.ui.verTodo ? filas : filas.filter(f=>cols.some(c=>tomasEnFecha(c).some(t=>filaPara(t.hora,filas)===f)));
-
-    // barra superior
     const rango=fmtDDMM(cols[0])+" al "+fmtDDMM(cols[6]);
+
+    // ---------- barra desktop ----------
     const barra='<div class="barra-reg">'+
       '<div class="semana-nav"><button data-ac="sem" data-d="-1" title="Semana anterior">‹</button>'+
         '<span class="rango">'+esc(rango)+'</span>'+
@@ -524,43 +574,62 @@
       ? '<div class="banner-ok"><span>🎉</span><span>¡Semana completa! Confirmaste todas las tomas.</span><button class="btn primario mini" data-ac="clonar-past">Crear pastillero siguiente</button></div>'
       : "";
 
-    // desktop
+    // ---------- tabla desktop ----------
     let thead='<tr><th class="hcol">Hora</th>'+cols.map(c=>{
       const di=dowIndex(c);
       return '<th'+(c===hoy?' style="background:color-mix(in srgb,var(--secundario) 12%,var(--superficie-2))"':'')+'><span class="diapunto" style="background:var(--d'+di+')"></span>'+diaCorto(c)+'<span class="fch">'+fmtDDMM(c)+'</span></th>';
     }).join("")+'</tr>';
-
     let cuerpo;
     if(!filasVis.length){
-      cuerpo='<tr><td class="hora-celda"></td><td colspan="7" style="padding:26px;text-align:center;color:var(--texto-suave)">No hay tomas esta semana. Tocá <b>Agregar toma</b> o activá <b>Ver todo</b> para cargar en cualquier horario.</td></tr>';
+      cuerpo='<tr><td class="hora-celda"></td><td colspan="7" style="padding:26px;text-align:center;color:var(--texto-suave)">No hay tomas esta semana. Tocá <b>Agregar toma</b> o activá <b>Ver todo</b>.</td></tr>';
     } else {
       cuerpo=filasVis.map(f=>{
         const celdas=cols.map(c=>'<td class="celda'+(c===hoy?' hoy':'')+'" data-ac="celda" data-fecha="'+c+'" data-hora="'+f+'">'+bloqueCelda(c,f,filas)+'</td>').join("");
         return '<tr><td class="hora-celda">'+f+'</td>'+celdas+'</tr>';
       }).join("");
     }
-    const desktop='<div class="grid-wrap"><div class="grid-scroll"><table class="grid"><thead>'+thead+'</thead><tbody>'+cuerpo+'</tbody></table></div></div>';
+    const desktop='<div class="reg-desktop">'+barra+'<div class="grid-wrap"><div class="grid-scroll"><table class="grid"><thead>'+thead+'</thead><tbody>'+cuerpo+'</tbody></table></div></div></div>';
 
-    // móvil día por día
-    let dm=state.ui.diaMovil; if(!cols.includes(dm)) dm=cols.includes(hoy)?hoy:cols[0];
-    const chips=cols.map(c=>{
-      const di=dowIndex(c); const n=tomasEnFecha(c).length;
-      return '<button class="dia-chip'+(c===dm?' activo':'')+(c===hoy?' hoy':'')+'" data-ac="dia-movil" data-fecha="'+c+'">'+
-        '<div class="dow"><span class="dot" style="background:var(--d'+di+')"></span>'+diaCorto(c)+'</div>'+
-        '<div class="fch">'+fmtDDMM(c)+'</div><div class="cnt">'+(n?n+(n===1?' toma':' tomas'):'libre')+'</div></button>';
-    }).join("");
-    const filasMovil = state.ui.verTodo ? filas : filas.filter(f=>tomasEnFecha(dm).some(t=>filaPara(t.hora,filas)===f));
-    let cuerpoMovil;
-    if(!filasMovil.length){
-      cuerpoMovil='<div class="mob-vacio"><span class="em">🌤️</span>Sin tomas para '+esc(diaCorto(dm))+' '+esc(fmtDDMM(dm))+'.<br><button class="btn sec mini" data-ac="agregar-toma" style="margin-top:10px">Agregar toma</button></div>';
+    // ---------- móvil: grilla de días o detalle ----------
+    const dm = (state.ui.diaMovil && cols.includes(state.ui.diaMovil)) ? state.ui.diaMovil : null;
+    let movilInner;
+    if(!dm){
+      const cards=cols.map(c=>{
+        const di=dowIndex(c); const ed=estadoDia(c); const cls=ed.n?ed.clase:"neutro";
+        const info = ed.n ? (ed.n+(ed.n===1?" toma":" tomas")+(ed.clase==="ok"?" ✓":(ed.clase==="pend"?" •":""))) : "libre";
+        return '<button class="dia-card '+cls+(c===hoy?' hoy':'')+(c===cols[6]?' full':'')+'" data-ac="dia-movil" data-fecha="'+c+'" style="--dc:var(--d'+di+')">'+
+          '<span class="dc-top"><span class="dc-dot"></span>'+(c===hoy?'<span class="dc-hoy">HOY</span>':'')+'</span>'+
+          '<span class="dc-dia">'+diaCorto(c)+'</span><span class="dc-fch">'+fmtDDMM(c)+'</span>'+
+          '<span class="dc-info">'+info+'</span></button>';
+      }).join("");
+      const barraMov='<div class="barra-reg"><div class="semana-nav"><button data-ac="sem" data-d="-1">‹</button><span class="rango">'+esc(rango)+'</span><button data-ac="sem" data-d="1">›</button></div><span class="spacer"></span><button class="btn sec mini" data-ac="agregar-toma">➕ Agregar</button></div>';
+      movilInner=barraMov+'<div class="dias-grid">'+cards+'</div>';
     } else {
-      cuerpoMovil=filasMovil.map(f=>'<div class="hora-bloque"><div class="lbl">🕐 '+f+'</div><div class="mob-slot" data-ac="celda" data-fecha="'+dm+'" data-hora="'+f+'">'+bloqueCelda(dm,f,filas)+'</div></div>').join("");
+      const di=dowIndex(dm);
+      const filasDia = state.ui.verTodo ? filas : filas.filter(f=>tomasEnFecha(dm).some(t=>filaPara(t.hora,filas)===f));
+      let cuerpoDia;
+      if(!filasDia.length){
+        cuerpoDia='<div class="mob-vacio"><span class="em">🌤️</span>Sin tomas para este día.<br><button class="btn sec mini" data-ac="agregar-toma" style="margin-top:12px">➕ Agregar medicamento</button></div>';
+      } else {
+        cuerpoDia=filasDia.map(f=>{
+          const enHora=tomasEnFecha(dm).filter(t=>filaPara(t.hora,filas)===f).sort((a,b)=>hhmmMin(a.hora)-hhmmMin(b.hora));
+          const activas=enHora.filter(t=>!esCancelado(t));
+          const clsHora = enHora.length ? (activas.length && activas.every(esConfirmado) ? "ok" : (activas.length?"pend":"neutro")) : "neutro";
+          const medsHtml = enHora.length ? enHora.map(t=>{
+            const est=estadoPorId(t.estado);
+            return '<div class="hc-med"><span class="hc-badge" style="background:'+esc(est.color)+'"></span><span class="hc-nombre">'+esc(nombreToma(t))+'</span><span class="hc-cant">'+fmtNum(t.cantidad)+' u.</span></div>';
+          }).join("") : '<div class="hc-vacio">Tocá para agregar</div>';
+          return '<button class="hora-card '+clsHora+'" data-ac="celda" data-fecha="'+dm+'" data-hora="'+f+'"><div class="hc-hora">🕐 '+f+'</div><div class="hc-meds">'+medsHtml+'</div></button>';
+        }).join("");
+      }
+      const acc='<div class="form-actions" style="margin:0 0 14px"><button class="btn sec mini" data-ac="agregar-toma">➕ Agregar medicamento</button><button class="btn ghost mini" data-ac="ver-todo">'+(state.ui.verTodo?"Ocultar horarios vacíos":"Ver todos los horarios")+'</button></div>';
+      movilInner='<div class="dia-detalle"><div class="dd-head"><button class="dd-back" data-ac="dia-volver" title="Volver">‹</button><div class="dd-title"><span class="dd-dot" style="background:var(--d'+di+')"></span>'+diaLargo(dm)+' <span class="dd-fch">'+fmtDDMM(dm)+'</span></div></div>'+acc+cuerpoDia+'</div>';
     }
-    const movil='<div class="mob-dia"><div class="dias-nav">'+chips+'</div>'+cuerpoMovil+'</div>';
+    const movil='<div class="mob-dia">'+movilInner+'</div>';
 
     return '<div class="vista-titulo"><h2>Registrar toma</h2><span class="sub">'+esc(p.nombre)+'</span></div>'+
-      '<p class="vista-desc">Tocá un casillero para ver, agregar o confirmar los medicamentos de ese horario. Al confirmar se descuenta el stock.</p>'+
-      barra + avisosStock() + banner + desktop + movil;
+      '<p class="vista-desc desc-registrar">Tocá un día para ver y confirmar sus medicamentos. Al confirmar se descuenta el stock.</p>'+
+      avisosStock() + banner + desktop + movil;
   }
 
   /* ---------- Modal de gestión de celda ---------- */
@@ -582,13 +651,14 @@
     const optMed = '<option value="">— Elegí un medicamento —</option>'+catalogo.map(m=>'<option value="'+esc(m.id)+'">'+esc(m.nombre)+(m.dosis?' ('+esc(m.dosis)+')':'')+'</option>').join("");
     const optEst = state.estadosToma.map(e=>'<option value="'+esc(e.id)+'"'+(e.id==="pendiente"?' selected':'')+'>'+esc(e.nombre)+'</option>').join("");
 
-    const addBox='<div class="add-box"><div class="tr-n" style="margin-bottom:8px">➕ Agregar a este horario</div>'+
+    const addBox='<div class="add-box"><div class="tr-n" style="margin-bottom:8px">➕ Agregar medicamento</div>'+
       '<div class="grid-form">'+
         '<div class="campo full"><label>Medicamento registrado</label><select data-cf="med">'+optMed+'</select></div>'+
         '<div class="campo full"><label>… o escribí uno no registrado</label><input data-cf="libre" placeholder="Ej: Vitamina C (sin stock)"></div>'+
-        '<div class="campo"><label>Cantidad (u.)</label><input data-cf="cant" type="number" min="0.25" step="0.25" value="1"></div>'+
-        '<div class="campo"><label>Estado</label><select data-cf="est">'+optEst+'</select></div>'+
-        '<label class="check full"><input type="checkbox" data-cf="semanal"> Repetir toda la semana (los 7 días a esta hora)</label>'+
+        '<div class="campo"><label>Horario</label><input data-cf="hora" type="time" value="'+esc(hora)+'"></div>'+
+        '<div class="campo"><label>Pastillas</label><input data-cf="cant" type="number" min="0.5" step="0.5" value="1"></div>'+
+        '<div class="campo full"><label>Estado</label><select data-cf="est">'+optEst+'</select></div>'+
+        '<label class="check full"><input type="checkbox" data-cf="semanal"> Repetir toda la semana (los 7 días a este horario)</label>'+
       '</div>'+
       '<div class="form-actions" style="margin-top:12px"><button class="btn primario block" data-ac="celda-add" data-fecha="'+fecha+'" data-hora="'+hora+'">Agregar</button></div></div>';
 
@@ -621,7 +691,7 @@
         '<div class="campo"><label>Horario</label><input data-f="c-hora" type="time" value="'+esc(t?t.hora:"08:00")+'"></div>'+
         '<div class="campo full"><label>Medicamento registrado</label><select data-f="c-med">'+optMed+'</select></div>'+
         '<div class="campo full"><label>… o uno no registrado</label><input data-f="c-libre" placeholder="Ej: Vitamina D" value="'+esc(t&&!t.medicamentoId?(t.nombreLibre||""):"")+'"></div>'+
-        '<div class="campo"><label>Cantidad (u.)</label><input data-f="c-cant" type="number" min="0.25" step="0.25" value="'+esc(t?t.cantidad:1)+'"></div>'+
+        '<div class="campo"><label>Pastillas</label><input data-f="c-cant" type="number" min="0.5" step="0.5" value="'+esc(t?t.cantidad:1)+'"></div>'+
         '<div class="campo"><label>Estado inicial</label><select data-f="c-est">'+optEst+'</select></div>'+
         (t?'':'<label class="check full"><input type="checkbox" data-f="c-semanal"> Semanal — repetir los 7 días de la semana</label>')+
       '</div>'+
@@ -663,19 +733,26 @@
 
     // medicamentos
     const em=state.ui.editandoMed; const me=em?medPorId(em):null;
+    const ppc0 = me ? (me.pastillasPorCaja||1) : 1;
+    const cajas0 = me ? Math.floor((Number(me.stock)||0)/ppc0) : 0;
+    const sueltas0 = me ? +(((Number(me.stock)||0) - cajas0*ppc0).toFixed(2)) : 0;
     const medForm='<div class="grid-form" style="margin-bottom:14px">'+
       '<div class="campo"><label>Nombre</label><input data-f="m-nombre" placeholder="Ibuprofeno" value="'+esc(me?me.nombre:"")+'"></div>'+
       '<div class="campo"><label>Droga / dosis</label><input data-f="m-dosis" placeholder="600 mg" value="'+esc(me?me.dosis:"")+'"></div>'+
-      '<div class="campo"><label>Stock (u.)</label><input data-f="m-stock" type="number" min="0" step="1" value="'+esc(me?me.stock:0)+'"></div>'+
-      '<div class="campo"><label>Stock crítico</label><input data-f="m-critico" type="number" min="0" step="1" value="'+esc(me?me.stockCritico:5)+'"></div></div>'+
+      '<div class="campo"><label>Pastillas por caja</label><input data-f="m-ppc" type="number" min="1" step="1" value="'+esc(ppc0)+'"></div>'+
+      '<div class="campo"><label>Cajas</label><input data-f="m-cajas" type="number" min="0" step="1" value="'+esc(cajas0)+'"></div>'+
+      '<div class="campo"><label>Pastillas sueltas</label><input data-f="m-sueltas" type="number" min="0" step="0.5" value="'+esc(sueltas0)+'"></div>'+
+      '<div class="campo"><label>Stock crítico (pastillas)</label><input data-f="m-critico" type="number" min="0" step="1" value="'+esc(me?me.stockCritico:5)+'"></div></div>'+
+      '<p class="hint" style="margin-top:-4px">El stock total en pastillas = cajas × pastillas por caja + sueltas. Al confirmar una toma se descuenta por pastillas (admite media pastilla).</p>'+
       '<div class="form-actions" style="margin-top:0"><button class="btn primario" data-ac="guardar-med">'+(me?'Guardar cambios':'Agregar medicamento')+'</button>'+(me?'<button class="btn ghost" data-ac="cancelar-edicion-med">Cancelar</button>':'')+'</div>';
     const catalogo=meds();
     let medLista = !catalogo.length ? '<div class="vacio-lista">Sin medicamentos en este pastillero.</div>' :
       '<div class="lista">'+catalogo.map(m=>{
         const n=nivelStock(m); const badge=n==="agotado"?'<span class="badge agotado">agotado</span>':n==="critico"?'<span class="badge critico">crítico</span>':'<span class="badge normal">normal</span>';
         const acc=n==="normal"?"var(--ok)":n==="critico"?"var(--alerta)":"var(--critico)";
+        const ppc=m.pastillasPorCaja||1; const cajasEq=ppc>1?' · ~'+Math.floor((Number(m.stock)||0)/ppc)+' cajas':'';
         return '<div class="item" style="--acc:'+acc+'"><div class="barra"></div><div class="item-main">'+
-          '<div class="item-t">'+esc(m.nombre)+' '+badge+'</div><div class="item-s">'+(m.dosis?'<span>'+esc(m.dosis)+'</span>':'')+'<span>Stock: <span class="stock-num">'+(Number(m.stock)||0)+'</span></span><span>Crítico ≤ '+(Number(m.stockCritico)||0)+'</span></div></div>'+
+          '<div class="item-t">'+esc(m.nombre)+' '+badge+'</div><div class="item-s">'+(m.dosis?'<span>'+esc(m.dosis)+'</span>':'')+'<span>Stock: <span class="stock-num">'+fmtNum(m.stock)+'</span> pastillas'+(ppc>1?' ('+ppc+'/caja'+cajasEq+')':'')+'</span><span>Crítico ≤ '+(Number(m.stockCritico)||0)+'</span></div></div>'+
           '<div class="item-acc"><button class="icon-btn" data-ac="ir-compra" data-id="'+esc(m.id)+'" title="Registrar compra">🛒</button>'+
           '<button class="icon-btn" data-ac="editar-med" data-id="'+esc(m.id)+'" title="Editar">✏️</button>'+
           '<button class="icon-btn del" data-ac="borrar-med" data-id="'+esc(m.id)+'" title="Eliminar">🗑️</button></div></div>';
@@ -685,7 +762,8 @@
     const optMedC='<option value="">— Elegí —</option>'+catalogo.map(m=>'<option value="'+esc(m.id)+'">'+esc(m.nombre)+'</option>').join("");
     const compForm='<div class="grid-form" style="margin-bottom:12px">'+
       '<div class="campo"><label>Medicamento</label><select data-f="co-med">'+optMedC+'</select></div>'+
-      '<div class="campo"><label>Cantidad comprada</label><input data-f="co-cant" type="number" min="1" step="1" value="10"></div>'+
+      '<div class="campo"><label>Cajas compradas</label><input data-f="co-cajas" type="number" min="1" step="1" value="1"></div>'+
+      '<div class="campo"><label>Pastillas por caja</label><input data-f="co-ppc" type="number" min="1" step="1" value="1"></div>'+
       '<div class="campo"><label>Precio (opcional)</label><input data-f="co-precio" type="number" min="0" step="0.01" placeholder="$"></div>'+
       '<div class="campo"><label>Fecha</label><input data-f="co-fecha" type="date" value="'+hoyISO()+'"></div>'+
       '<div class="campo full"><label>Nota (opcional)</label><input data-f="co-nota" placeholder="Farmacia, lote, etc."></div></div>'+
@@ -693,8 +771,8 @@
     const comprasAct=state.compras.filter(c=>c.pastilleroId===state.pastilleroActivo).slice().reverse().slice(0,8);
     let compLista = !comprasAct.length ? '<div class="vacio-lista" style="margin-top:12px">Todavía no registraste compras.</div>' :
       '<div class="lista" style="margin-top:12px">'+comprasAct.map(c=>'<div class="item"><div class="barra" style="background:var(--secundario)"></div><div class="item-main">'+
-        '<div class="item-t">'+esc(c.medNombre)+' <span class="badge normal">+'+(Number(c.cantidad)||0)+' u.</span></div>'+
-        '<div class="item-s"><span>'+esc(fmtDDMM(c.fecha))+'</span>'+(c.precio?'<span>$'+esc(c.precio)+'</span>':'')+(c.nota?'<span>'+esc(c.nota)+'</span>':'')+'</div></div></div>').join("")+'</div>';
+        '<div class="item-t">'+esc(c.medNombre)+' <span class="badge normal">+'+fmtNum(c.cantidad)+' pastillas</span></div>'+
+        '<div class="item-s"><span>'+esc(fmtDDMM(c.fecha))+'</span>'+(c.cajas?'<span>'+c.cajas+' cajas × '+(c.ppc||1)+'</span>':'')+(c.precio?'<span>$'+esc(c.precio)+'</span>':'')+(c.nota?'<span>'+esc(c.nota)+'</span>':'')+'</div></div></div>').join("")+'</div>';
 
     // estados
     const estHtml='<div class="lista">'+state.estadosToma.map(e=>'<div class="item"><span class="swatch" style="background:'+esc(e.color)+'"></span>'+
@@ -773,21 +851,27 @@
   function guardarMed(){
     const nombre=val("m-nombre").trim(); if(!nombre){ toast("Poné un nombre","alerta"); return; }
     const dosis=val("m-dosis").trim();
-    const stock=clamp(parseInt(val("m-stock"),10)||0,0,999999), critico=clamp(parseInt(val("m-critico"),10)||0,0,999999);
+    const ppc=Math.max(1, parseInt(val("m-ppc"),10)||1);
+    const cajas=Math.max(0, parseInt(val("m-cajas"),10)||0);
+    const sueltas=Math.max(0, parseFloat(val("m-sueltas"))||0);
+    const stock=+(cajas*ppc + sueltas).toFixed(2);
+    const critico=clamp(parseInt(val("m-critico"),10)||0,0,999999);
     const ed=state.ui.editandoMed;
-    if(ed){ const m=medPorId(ed); if(m) Object.assign(m,{nombre,dosis,stock,stockCritico:critico}); state.ui.editandoMed=null; toast("Medicamento actualizado","ok"); }
-    else { state.medicamentos.push({id:uid(),pastilleroId:state.pastilleroActivo,nombre,dosis,stock,stockCritico:critico}); toast("Medicamento agregado","ok"); }
+    if(ed){ const m=medPorId(ed); if(m) Object.assign(m,{nombre,dosis,pastillasPorCaja:ppc,stock,stockCritico:critico}); state.ui.editandoMed=null; toast("Medicamento actualizado","ok"); }
+    else { state.medicamentos.push({id:uid(),pastilleroId:state.pastilleroActivo,nombre,dosis,pastillasPorCaja:ppc,stock,stockCritico:critico}); toast("Medicamento agregado","ok"); }
     guardar(); render();
   }
 
   function registrarCompra(){
     const medId=val("co-med"); const m=medPorId(medId);
     if(!m){ toast("Elegí un medicamento","alerta"); return; }
-    const cant=parseInt(val("co-cant"),10)||0; if(cant<=0){ toast("La cantidad debe ser mayor a 0","alerta"); return; }
+    const cajas=parseInt(val("co-cajas"),10)||0; if(cajas<=0){ toast("Las cajas deben ser mayor a 0","alerta"); return; }
+    const ppc=Math.max(1, parseInt(val("co-ppc"),10)|| (m.pastillasPorCaja||1));
+    const total=cajas*ppc;
     const precio=val("co-precio").trim(); const fecha=val("co-fecha")||hoyISO(); const nota=val("co-nota").trim();
-    m.stock=(Number(m.stock)||0)+cant;
-    state.compras.push({id:uid(),pastilleroId:state.pastilleroActivo,medicamentoId:medId,medNombre:m.nombre,cantidad:cant,precio:precio||null,fecha,nota:nota||null});
-    guardar(); render(); toast("Compra registrada (+"+cant+" u.)","ok");
+    m.stock=(Number(m.stock)||0)+total; m.pastillasPorCaja=ppc;
+    state.compras.push({id:uid(),pastilleroId:state.pastilleroActivo,medicamentoId:medId,medNombre:m.nombre,cajas,ppc,cantidad:total,precio:precio||null,fecha,nota:nota||null});
+    guardar(); render(); toast("Compra registrada (+"+total+" pastillas)","ok");
   }
 
   function clonarPastillero(){
@@ -804,7 +888,7 @@
     state.tomas.filter(t=>t.pastilleroId===p.id && set.has(t.fecha) && t.medicamentoId && mapa[t.medicamentoId]).forEach(t=>{
       state.tomas.push({id:uid(),pastilleroId:nid,fecha:addDays(t.fecha,7),hora:t.hora,medicamentoId:mapa[t.medicamentoId],nombreLibre:null,cantidad:t.cantidad,estado:pend.id,descontado:false}); n++;
     });
-    state.pastilleroActivo=nid; state.ui.semanaOffset=0; state.ui.diaMovil=nuevoInicio;
+    state.pastilleroActivo=nid; state.ui.semanaOffset=0; state.ui.diaMovil=null;
     guardar(); render(); toast("Pastillero N°"+num+" creado con "+n+" tomas pendientes","ok");
   }
 
@@ -814,6 +898,42 @@
     const url=URL.createObjectURL(blob); const a=document.createElement("a");
     a.href=url; a.download="mi-pastillero-"+hoyISO()+".json"; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(()=>URL.revokeObjectURL(url),1000); toast("Backup exportado","ok");
+  }
+
+  /* ---- Google/Apple Calendar (.ics con alarmas nativas) ---- */
+  const _pad = (n) => String(n).padStart(2,"0");
+  const icsEsc = (s) => String(s==null?"":s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");
+  function icsStampUTC(){ const d=new Date(); return d.getUTCFullYear()+_pad(d.getUTCMonth()+1)+_pad(d.getUTCDate())+"T"+_pad(d.getUTCHours())+_pad(d.getUTCMinutes())+_pad(d.getUTCSeconds())+"Z"; }
+  function icsLocal(iso,hora){ const p=String(iso).split("-"); const h=String(hora).split(":"); return p[0]+p[1]+p[2]+"T"+(_pad(h[0]||"0"))+(_pad(h[1]||"0"))+"00"; }
+  function icsTrigger(){ const a=Number(state.config.avisos.antelacion)||0; return a>0? "-PT"+a+"M" : "PT0M"; }
+  function construirICS(){
+    const p=pastAct(); const hoy=hoyISO();
+    const list=tomasAct().filter(t=>t.fecha>=hoy && !esCancelado(t));
+    const g={}; list.forEach(t=>{ const k=t.fecha+"|"+t.hora; (g[k]=g[k]||[]).push(t); });
+    const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Mi Pastillero//AR//ES","CALSCALE:GREGORIAN","METHOD:PUBLISH"];
+    Object.keys(g).sort().forEach(k=>{
+      const partes=k.split("|"), fecha=partes[0], hora=partes[1], tomas=g[k];
+      const nombres=tomas.map(t=>{ const c=Number(t.cantidad)||0; return nombreToma(t)+(c?" ("+fmtNum(c)+")":""); }).join(", ");
+      L.push("BEGIN:VEVENT");
+      L.push("UID:"+k.replace(/[|:]/g,"")+"-"+p.id+"@mipastillero");
+      L.push("DTSTAMP:"+icsStampUTC());
+      L.push("DTSTART:"+icsLocal(fecha,hora));
+      L.push("DURATION:PT10M");
+      L.push("SUMMARY:"+icsEsc("💊 Toma "+hora));
+      L.push("DESCRIPTION:"+icsEsc("Pastillero N°"+(p.numero||"")+" · "+nombres));
+      L.push("BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+icsEsc("Hora de tu toma: "+nombres),"TRIGGER:"+icsTrigger(),"END:VALARM");
+      L.push("END:VEVENT");
+    });
+    L.push("END:VCALENDAR");
+    return L.join("\r\n");
+  }
+  function exportarICS(){
+    const txt=construirICS();
+    if(txt.indexOf("BEGIN:VEVENT")<0){ toast("No hay tomas futuras para exportar","alerta"); return; }
+    const blob=new Blob([txt],{type:"text/calendar;charset=utf-8"});
+    const url=URL.createObjectURL(blob); const a=document.createElement("a");
+    a.href=url; a.download="mi-pastillero-"+hoyISO()+".ics"; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000); toast("Calendario exportado (.ics)","ok");
   }
   function importar(file){
     const r=new FileReader();
@@ -910,7 +1030,10 @@
 
   /* ===================== Paneles (avisos e instalación) ===================== */
   function panelRecordatorios(){
-    if(!soportaAvisos()) return '<div class="panel"><h3><span class="ic">🔔</span>Recordatorios de toma</h3><p class="hint">Este navegador no soporta notificaciones. Abrí la app desde Chrome (Android) o Safari (iPhone) por HTTPS.</p></div>';
+    const icsBloque='<div class="add-box" style="margin-top:14px"><div class="tr-n" style="margin-bottom:4px">📅 Aviso con el celular cerrado</div>'+
+      '<p class="hint" style="margin-top:0">Exportá tus tomas futuras a un archivo <b>.ics</b> e importalo una vez en Google Calendar o el calendario del iPhone. El calendario dispara alarmas nativas aunque la app esté cerrada. Si cambiás tomas, volvé a exportar.</p>'+
+      '<button class="btn sec" data-ac="exportar-ics">📅 Exportar a calendario (.ics)</button></div>';
+    if(!soportaAvisos()) return '<div class="panel"><h3><span class="ic">🔔</span>Recordatorios de toma</h3><p class="hint">Este navegador no soporta notificaciones del sistema. Igual podés usar el recordatorio por calendario:</p>'+icsBloque+'</div>';
     const av=state.config.avisos, perm=permisoAvisos(); let estado, accion;
     if(av.activos && perm==="granted"){ estado='<span class="badge normal">activos</span>'; accion='<button class="btn ghost" data-ac="desactivar-avisos">Desactivar</button><button class="btn sec" data-ac="probar-aviso">Probar aviso</button>'; }
     else if(perm==="denied"){ estado='<span class="badge agotado">bloqueados</span>'; accion='<button class="btn ghost" data-ac="ayuda-permiso">¿Cómo desbloquear?</button>'; }
@@ -921,9 +1044,9 @@
         '<div style="margin-top:12px"><label style="font-weight:700;font-size:.82rem;color:var(--texto-suave);display:block;margin-bottom:6px">Antelación</label><div class="intervalos">'+ante+'</div></div>'
       : '';
     return '<div class="panel"><h3><span class="ic">🔔</span>Recordatorios de toma '+estado+'</h3>'+
-      '<p class="hint">Con la app abierta en el celular te avisa con una notificación del sistema y un sonido cuando llega el horario de una toma pendiente.</p>'+
-      '<div class="form-actions" style="margin-top:0">'+accion+'</div>'+ extra +
-      '<p class="hint" style="margin-top:14px;margin-bottom:0">⚠️ Funciona mientras la app esté abierta (aunque sea en segundo plano). Para avisos con el celular bloqueado o la app cerrada, conviene sumar Google Calendar o WhatsApp.</p></div>';
+      '<p class="hint">Con la app abierta en el celular te avisa con una notificación del sistema y un sonido cuando llega el horario de una toma pendiente. La antelación también se aplica al calendario.</p>'+
+      '<div class="form-actions" style="margin-top:0">'+accion+'</div>'+ extra + icsBloque +
+      '<p class="hint" style="margin-top:14px;margin-bottom:0">⚠️ La notificación del sistema funciona mientras la app esté abierta (aunque sea en segundo plano). Para el aviso con el celular bloqueado, usá el calendario (.ics) de acá arriba.</p></div>';
   }
   function panelInstalar(){
     return '<div class="panel"><h3><span class="ic">📲</span>Instalar como app</h3><p class="hint">Instalala para abrirla como una app, con su ícono en la pantalla de inicio. Recomendado para que los recordatorios anden mejor.</p>'+
@@ -937,18 +1060,21 @@
     const ac=btn.dataset.ac, id=btn.dataset.id;
     switch(ac){
       case "tab": state.ui.vista=btn.dataset.k; state.ui.editandoToma=null; state.ui.editandoMed=null; render(); break;
-      case "sem": state.ui.semanaOffset=(state.ui.semanaOffset||0)+parseInt(btn.dataset.d,10); guardar(); render(); break;
+      case "sem": state.ui.semanaOffset=(state.ui.semanaOffset||0)+parseInt(btn.dataset.d,10); state.ui.diaMovil=null; guardar(); render(); break;
       case "ver-todo": state.ui.verTodo=!state.ui.verTodo; guardar(); render(); break;
       case "dia-movil": state.ui.diaMovil=btn.dataset.fecha; guardar(); render(); break;
+      case "dia-volver": state.ui.diaMovil=null; guardar(); render(); break;
 
       case "celda": abrirCeldaModal(btn.dataset.fecha, btn.dataset.hora); break;
       case "celda-cerrar": cerrarCeldaModal(); break;
       case "celda-add": {
         const medId=cval("med"), libre=cval("libre").trim(), cant=parseFloat(cval("cant"))||0, est=cval("est");
+        const hora=cval("hora")||btn.dataset.hora;
         if(!medId && !libre){ toast("Elegí o escribí un medicamento","alerta"); break; }
         if(cant<=0){ toast("Cantidad inválida","alerta"); break; }
-        if(cchk("semanal")){ columnas().forEach(c=>crearToma(c,btn.dataset.hora,medId,libre,cant,est)); toast("Agregado a los 7 días","ok"); }
-        else { crearToma(btn.dataset.fecha,btn.dataset.hora,medId,libre,cant,est); toast("Medicamento agregado","ok"); }
+        if(cchk("semanal")){ columnas().forEach(c=>crearToma(c,hora,medId,libre,cant,est)); toast("Agregado a los 7 días","ok"); }
+        else { crearToma(btn.dataset.fecha,hora,medId,libre,cant,est); toast("Medicamento agregado","ok"); }
+        if(celdaAbierta) celdaAbierta.hora=hora;
         guardar(); refrescarCeldaModal(); render(); break;
       }
       case "celda-del": {
@@ -996,10 +1122,10 @@
           {key:"tipo",label:"Tipo",tipo:"select",valor:"semanal",opciones:[{value:"semanal",label:"Semanal"},{value:"mensual",label:"Mensual"}]},
           {key:"fechaInicio",label:"Día de comienzo",tipo:"date",valor:hoyISO()}
         ],confirmar:"Crear"});
-        if(r && r.nombre.trim()){ const num=(++state.contadorPastillero); const np={id:uid(),numero:num,nombre:r.nombre.trim(),tipo:r.tipo,fechaInicio:r.fechaInicio||hoyISO(),creado:hoyISO()}; state.pastilleros.push(np); state.pastilleroActivo=np.id; state.ui.semanaOffset=0; state.ui.diaMovil=np.fechaInicio; guardar(); render(); toast("Pastillero N°"+num+" creado","ok"); }
+        if(r && r.nombre.trim()){ const num=(++state.contadorPastillero); const np={id:uid(),numero:num,nombre:r.nombre.trim(),tipo:r.tipo,fechaInicio:r.fechaInicio||hoyISO(),creado:hoyISO()}; state.pastilleros.push(np); state.pastilleroActivo=np.id; state.ui.semanaOffset=0; state.ui.diaMovil=null; guardar(); render(); toast("Pastillero N°"+num+" creado","ok"); }
         break;
       }
-      case "activar-past": state.pastilleroActivo=id; state.ui.semanaOffset=0; state.ui.diaMovil=pastAct().fechaInicio; guardar(); render(); break;
+      case "activar-past": state.pastilleroActivo=id; state.ui.semanaOffset=0; state.ui.diaMovil=null; guardar(); render(); break;
       case "editar-past": {
         const p=state.pastilleros.find(x=>x.id===id); if(!p) break;
         const r=await modal({titulo:"Editar pastillero",campos:[
@@ -1007,7 +1133,7 @@
           {key:"tipo",label:"Tipo",tipo:"select",valor:p.tipo,opciones:[{value:"semanal",label:"Semanal"},{value:"mensual",label:"Mensual"}]},
           {key:"fechaInicio",label:"Día de comienzo",tipo:"date",valor:p.fechaInicio}
         ],confirmar:"Guardar"});
-        if(r && r.nombre.trim()){ p.nombre=r.nombre.trim(); p.tipo=r.tipo; p.fechaInicio=r.fechaInicio||p.fechaInicio; if(p.id===state.pastilleroActivo){ state.ui.semanaOffset=0; state.ui.diaMovil=p.fechaInicio; } guardar(); render(); toast("Pastillero actualizado","ok"); }
+        if(r && r.nombre.trim()){ p.nombre=r.nombre.trim(); p.tipo=r.tipo; p.fechaInicio=r.fechaInicio||p.fechaInicio; if(p.id===state.pastilleroActivo){ state.ui.semanaOffset=0; state.ui.diaMovil=null; } guardar(); render(); toast("Pastillero actualizado","ok"); }
         break;
       }
       case "borrar-past": {
@@ -1017,7 +1143,7 @@
           state.tomas=state.tomas.filter(t=>t.pastilleroId!==id);
           state.compras=state.compras.filter(c=>c.pastilleroId!==id);
           state.pastilleros=state.pastilleros.filter(x=>x.id!==id);
-          if(state.pastilleroActivo===id){ state.pastilleroActivo=state.pastilleros[0].id; state.ui.semanaOffset=0; state.ui.diaMovil=pastAct().fechaInicio; }
+          if(state.pastilleroActivo===id){ state.pastilleroActivo=state.pastilleros[0].id; state.ui.semanaOffset=0; state.ui.diaMovil=null; }
           guardar(); render(); toast("Pastillero eliminado");
         } break;
       }
@@ -1052,6 +1178,7 @@
       case "set-fuente": state.config.fuente=btn.dataset.css; guardar(); render(); break;
       case "reset-colores": state.config.colorPrimario="#2E7D6B"; state.config.colorSecundario="#E0A458"; guardar(); render(); toast("Colores restablecidos","ok"); break;
       case "exportar": exportar(); break;
+      case "exportar-ics": exportarICS(); break;
       case "importar": $("#fileImport").click(); break;
 
       /* Recordatorios */
@@ -1080,7 +1207,8 @@
     const s=e.target.closest('[data-cf="estado"]');
     if(s){ const t=state.tomas.find(x=>x.id===s.dataset.id); if(t){ revertirStock(t); t.estado=s.value; sincronizarStock(t); guardar(); refrescarCeldaModal(); render();
         const m=t.medicamentoId?medPorId(t.medicamentoId):null; if(esConfirmado(t)&&m&&nivelStock(m)!=="normal") toast("¡Ojo! "+m.nombre+" quedó "+nivelStock(m),"alerta"); } return; }
-    if(e.target.id==="selPastillero"){ state.pastilleroActivo=e.target.value; state.ui.editandoMed=null; state.ui.editandoToma=null; state.ui.semanaOffset=0; state.ui.diaMovil=pastAct().fechaInicio; guardar(); render(); }
+    if(e.target.id==="selPastillero"){ state.pastilleroActivo=e.target.value; state.ui.editandoMed=null; state.ui.editandoToma=null; state.ui.semanaOffset=0; state.ui.diaMovil=null; guardar(); render(); }
+    if(e.target.dataset && e.target.dataset.f==="co-med"){ const m=medPorId(e.target.value); const p=$('[data-f="co-ppc"]'); if(m && p) p.value=m.pastillasPorCaja||1; }
     if(e.target.id==="fileImport"){ const f=e.target.files[0]; if(f) importar(f); e.target.value=""; }
   });
 
