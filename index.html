@@ -138,22 +138,25 @@
   .mob-vacio .em{font-size:1.6rem;display:block;margin-bottom:6px}
 
   /* Móvil: grilla de días grandes */
-  .dias-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
-  .dia-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:clamp(106px,15.5vh,168px);padding:14px;border-radius:18px;border:1.5px solid var(--borde);background:var(--superficie);box-shadow:var(--sombra-sm);text-align:left;overflow:hidden;transition:transform .08s}
-  .dia-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--dc)}
-  .dia-card:active{transform:scale(.98)}
-  .dia-card.pend{background:var(--pastel-pend-bg);border-color:var(--pastel-pend-bd)}
-  .dia-card.ok{background:var(--pastel-ok-bg);border-color:var(--pastel-ok-bd)}
-  .dia-card.hoy{outline:2.5px solid var(--secundario);outline-offset:-2.5px}
-  .dia-card.full{grid-column:1 / -1;min-height:auto;flex-direction:row;align-items:center;gap:12px}
-  .dc-top{display:flex;align-items:center;gap:6px;width:100%}
-  .dc-dot{width:12px;height:12px;border-radius:50%;background:var(--dc);flex:0 0 auto}
-  .dc-hoy{margin-left:auto;font-size:.62rem;font-weight:800;letter-spacing:.05em;background:var(--secundario);color:#fff;padding:2px 8px;border-radius:999px}
-  .dc-dia{font-size:1.65rem;font-weight:800;line-height:1;letter-spacing:-.02em}
-  .dc-fch{font-size:.85rem;font-weight:700;color:var(--texto-suave);font-variant-numeric:tabular-nums}
-  .dc-info{font-size:.72rem;font-weight:800;color:var(--texto-suave);margin-top:auto;background:color-mix(in srgb,var(--texto) 7%,transparent);padding:3px 9px;border-radius:999px}
-  .dia-card.full .dc-top{width:auto}
-  .dia-card.full .dc-dia{font-size:1.3rem}
+  .dias-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  .dia-card{--lift:5px;--dc:var(--primario);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;
+    min-height:clamp(112px,16vh,172px);padding:16px 12px;border:none;border-radius:20px;overflow:hidden;
+    background:linear-gradient(180deg, color-mix(in srgb,var(--dc) 15%, #fff), color-mix(in srgb,var(--dc) 5%, var(--superficie)));
+    box-shadow:0 var(--lift) 0 color-mix(in srgb,var(--dc) 34%, #000 12%), 0 calc(var(--lift) + 4px) 16px color-mix(in srgb,var(--dc) 26%, transparent);
+    transition:transform .08s ease, box-shadow .12s ease}
+  .dia-card:active{transform:translateY(calc(var(--lift) - 1px));box-shadow:0 1px 0 color-mix(in srgb,var(--dc) 34%, #000 12%), 0 3px 8px color-mix(in srgb,var(--dc) 22%, transparent)}
+  .dia-card.pend{background:linear-gradient(180deg, #fffce9, var(--pastel-pend-bg));box-shadow:0 var(--lift) 0 var(--pastel-pend-bd), 0 calc(var(--lift) + 4px) 16px color-mix(in srgb,var(--pastel-pend-bd) 45%, transparent)}
+  .dia-card.pend:active{box-shadow:0 1px 0 var(--pastel-pend-bd), 0 3px 8px color-mix(in srgb,var(--pastel-pend-bd) 40%, transparent)}
+  .dia-card.ok{background:linear-gradient(180deg, #ecfbf0, var(--pastel-ok-bg));box-shadow:0 var(--lift) 0 var(--pastel-ok-bd), 0 calc(var(--lift) + 4px) 16px color-mix(in srgb,var(--pastel-ok-bd) 45%, transparent)}
+  .dia-card.ok:active{box-shadow:0 1px 0 var(--pastel-ok-bd), 0 3px 8px color-mix(in srgb,var(--pastel-ok-bd) 40%, transparent)}
+  .dia-card.hoy{outline:3px solid var(--secundario);outline-offset:-3px}
+  .dia-card.full{grid-column:1 / -1;min-height:auto;flex-direction:row;gap:12px;padding:16px 18px}
+  .dc-hoy{position:absolute;top:9px;right:10px;font-size:.6rem;font-weight:800;letter-spacing:.06em;background:var(--secundario);color:#fff;padding:2px 8px;border-radius:999px;box-shadow:0 1px 2px rgba(0,0,0,.18)}
+  .dc-dot{width:14px;height:14px;border-radius:50%;background:var(--dc);box-shadow:0 1px 2px rgba(0,0,0,.2), inset 0 1px 1px rgba(255,255,255,.4)}
+  .dc-dia{font-size:1.75rem;font-weight:800;line-height:1;letter-spacing:-.02em}
+  .dc-fch{font-size:.86rem;font-weight:700;color:var(--texto-suave);font-variant-numeric:tabular-nums}
+  .dc-info{font-size:.72rem;font-weight:800;color:color-mix(in srgb,var(--texto) 70%, transparent);background:rgba(255,255,255,.55);padding:3px 10px;border-radius:999px;margin-top:2px}
+  .dia-card.full .dc-dia{font-size:1.35rem}
   .dia-card.full .dc-info{margin-top:0;margin-left:auto}
 
   /* Móvil: detalle del día */
@@ -192,18 +195,24 @@
   .check{display:flex;align-items:center;gap:9px;background:var(--superficie-2);border:1.5px solid var(--borde-fuerte);border-radius:var(--r-sm);padding:11px 12px;font-weight:700;font-size:.9rem;cursor:pointer}
   .check input{width:18px;height:18px;accent-color:var(--primario)}
 
-  .btn{border:none;border-radius:var(--r-sm);padding:11px 18px;font-weight:800;font-size:.92rem;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s, transform .08s, background .15s}
-  .btn:active{transform:translateY(1px)}
-  .btn.primario{background:var(--primario);color:#fff;box-shadow:var(--sombra-sm)}
-  .btn.primario:hover{filter:brightness(1.07)}
-  .btn.sec{background:color-mix(in srgb,var(--secundario) 18%,var(--superficie));color:color-mix(in srgb,var(--secundario) 70%,#000);border:1.5px solid color-mix(in srgb,var(--secundario) 40%,transparent)}
-  .btn.ghost{background:var(--superficie-2);color:var(--texto);border:1.5px solid var(--borde-fuerte)}
-  .btn.ghost:hover{border-color:var(--texto-suave)}
-  .btn.peligro{background:color-mix(in srgb,var(--critico) 12%,var(--superficie));color:var(--critico);border:1.5px solid color-mix(in srgb,var(--critico) 35%,transparent)}
-  .btn.peligro:hover{background:color-mix(in srgb,var(--critico) 18%,var(--superficie))}
-  .btn.mini{padding:7px 11px;font-size:.82rem;border-radius:8px}
+  .btn{--lift:4px;--btn-dark:rgba(0,0,0,.22);--btn-glow:rgba(38,48,44,.16);
+    border:none;border-radius:var(--r-sm);padding:12px 18px;font-weight:800;font-size:.92rem;
+    display:inline-flex;align-items:center;justify-content:center;text-align:center;gap:8px;
+    box-shadow:0 var(--lift) 0 var(--btn-dark), 0 calc(var(--lift) + 3px) 12px var(--btn-glow);
+    transition:transform .08s ease, box-shadow .12s ease, filter .15s}
+  .btn:hover{filter:brightness(1.05)}
+  .btn:active{transform:translateY(calc(var(--lift) - 1px));box-shadow:0 1px 0 var(--btn-dark), 0 2px 6px var(--btn-glow)}
+  .btn.primario{background:linear-gradient(180deg, color-mix(in srgb,var(--primario) 82%, #fff), var(--primario));color:#fff;
+    --btn-dark:color-mix(in srgb,var(--primario) 55%, #000 32%);--btn-glow:color-mix(in srgb,var(--primario) 34%, transparent)}
+  .btn.sec{background:linear-gradient(180deg, color-mix(in srgb,var(--secundario) 26%, #fff), color-mix(in srgb,var(--secundario) 52%, #fff));color:color-mix(in srgb,var(--secundario) 74%,#000);
+    --btn-dark:color-mix(in srgb,var(--secundario) 52%, #000 16%);--btn-glow:color-mix(in srgb,var(--secundario) 34%, transparent)}
+  .btn.ghost{background:linear-gradient(180deg, #fff, var(--superficie-2));color:var(--texto);
+    --btn-dark:var(--borde-fuerte);--btn-glow:rgba(38,48,44,.1)}
+  .btn.peligro{background:linear-gradient(180deg, color-mix(in srgb,var(--critico) 14%, #fff), color-mix(in srgb,var(--critico) 30%, #fff));color:var(--critico);
+    --btn-dark:color-mix(in srgb,var(--critico) 45%, #000 12%);--btn-glow:color-mix(in srgb,var(--critico) 26%, transparent)}
+  .btn.mini{--lift:3px;padding:8px 12px;font-size:.82rem;border-radius:9px}
   .btn.block{width:100%}
-  .btn[disabled]{opacity:.45;cursor:not-allowed}
+  .btn[disabled]{opacity:.5;cursor:not-allowed;box-shadow:none;transform:none}
   .form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 
   .intervalos{display:flex;flex-wrap:wrap;gap:8px}
@@ -598,7 +607,8 @@
         const di=dowIndex(c); const ed=estadoDia(c); const cls=ed.n?ed.clase:"neutro";
         const info = ed.n ? (ed.n+(ed.n===1?" toma":" tomas")+(ed.clase==="ok"?" ✓":(ed.clase==="pend"?" •":""))) : "libre";
         return '<button class="dia-card '+cls+(c===hoy?' hoy':'')+(c===cols[6]?' full':'')+'" data-ac="dia-movil" data-fecha="'+c+'" style="--dc:var(--d'+di+')">'+
-          '<span class="dc-top"><span class="dc-dot"></span>'+(c===hoy?'<span class="dc-hoy">HOY</span>':'')+'</span>'+
+          (c===hoy?'<span class="dc-hoy">HOY</span>':'')+
+          '<span class="dc-dot"></span>'+
           '<span class="dc-dia">'+diaCorto(c)+'</span><span class="dc-fch">'+fmtDDMM(c)+'</span>'+
           '<span class="dc-info">'+info+'</span></button>';
       }).join("");
