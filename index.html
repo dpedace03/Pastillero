@@ -160,15 +160,14 @@
   .dia-card.full .dc-info{margin-top:0;margin-left:auto}
 
   /* Móvil: detalle del día */
-  .dd-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-  .dd-back{width:44px;height:44px;border-radius:13px;border:1.5px solid var(--borde-fuerte);background:var(--superficie);font-size:1.5rem;color:var(--texto);flex:0 0 auto;line-height:1;box-shadow:var(--sombra-sm)}
+  .dd-head{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .dd-back{width:42px;height:42px;border-radius:13px;border:1.5px solid var(--borde-fuerte);background:var(--superficie);font-size:1.5rem;color:var(--texto);flex:0 0 auto;line-height:1;box-shadow:var(--sombra-sm)}
   .dd-back:active{transform:scale(.96)}
-  .dd-title{font-size:1.3rem;font-weight:800;display:flex;align-items:center;gap:9px}
-  .dd-dot{width:14px;height:14px;border-radius:50%;flex:0 0 auto}
-  .dd-fch{font-size:.9rem;font-weight:700;color:var(--texto-suave);font-variant-numeric:tabular-nums}
-  .dd-acc{display:flex;gap:10px;align-items:stretch;margin:0 0 14px}
-  .dd-acc .dd-add{flex:0 0 auto;width:48px;padding-left:0;padding-right:0;font-size:1.4rem}
-  .dd-acc .dd-ver{flex:1 1 auto}
+  .dd-title{flex:1 1 auto;min-width:0;font-size:1.15rem;font-weight:800;display:flex;align-items:center;gap:8px;overflow:hidden;white-space:nowrap}
+  .dd-dot{width:13px;height:13px;border-radius:50%;flex:0 0 auto}
+  .dd-fch{font-size:.85rem;font-weight:700;color:var(--texto-suave);font-variant-numeric:tabular-nums;flex:0 0 auto}
+  .dd-head .btn.xs{flex:0 0 auto}
+  .dd-head .dd-add{width:32px;padding:0;font-size:1.15rem}
   .hora-card{display:block;width:100%;text-align:left;border:1.5px solid var(--borde);border-left-width:6px;border-radius:16px;padding:14px;margin-bottom:12px;background:var(--superficie);box-shadow:var(--sombra-sm);transition:transform .08s}
   .hora-card:active{transform:scale(.99)}
   .hora-card.pend{border-left-color:var(--pastel-pend-bd);background:color-mix(in srgb,var(--pastel-pend-bg) 50%,var(--superficie))}
@@ -214,8 +213,12 @@
   .btn.peligro{background:linear-gradient(180deg, color-mix(in srgb,var(--critico) 14%, #fff), color-mix(in srgb,var(--critico) 30%, #fff));color:var(--critico);
     --btn-dark:color-mix(in srgb,var(--critico) 45%, #000 12%);--btn-glow:color-mix(in srgb,var(--critico) 26%, transparent)}
   .btn.mini{--lift:3px;padding:8px 12px;font-size:.82rem;border-radius:9px}
+  .btn.xs{--lift:2px;padding:6px 10px;font-size:.75rem;border-radius:8px}
   .btn.block{width:100%}
   .btn[disabled]{opacity:.5;cursor:not-allowed;box-shadow:none;transform:none}
+  .btn-reloj{width:38px;height:38px;flex:0 0 auto;border-radius:50%;border:1.5px solid var(--borde-fuerte);background:linear-gradient(180deg,#fff,var(--superficie-2));font-size:1.15rem;line-height:1;display:grid;place-items:center;box-shadow:0 2px 0 var(--borde-fuerte),0 3px 7px rgba(38,48,44,.1);transition:transform .08s, box-shadow .12s}
+  .btn-reloj:hover{filter:brightness(1.03)}
+  .btn-reloj:active{transform:translateY(2px);box-shadow:0 0 0 var(--borde-fuerte),0 1px 4px rgba(38,48,44,.1)}
   .form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 
   .intervalos{display:flex;flex-wrap:wrap;gap:8px}
@@ -313,6 +316,7 @@
   <header class="top">
     <div class="top-row">
       <div class="marca"><span class="logo" aria-hidden="true"></span> Mi Pastillero</div>
+      <button class="btn-reloj" data-ac="exportar-ics" title="Exportar a calendario (.ics)" aria-label="Exportar a calendario (.ics)">🕐</button>
       <span class="spacer"></span>
       <div class="pastillero-sel"><select id="selPastillero" aria-label="Pastillero activo"></select></div>
     </div>
@@ -638,8 +642,8 @@
           return '<button class="hora-card '+clsHora+'" data-ac="celda" data-fecha="'+dm+'" data-hora="'+f+'"><div class="hc-hora">🕐 '+f+'</div><div class="hc-meds">'+medsHtml+'</div></button>';
         }).join("");
       }
-      const acc='<div class="dd-acc"><button class="btn sec mini dd-add" data-ac="agregar-toma" title="Agregar medicamento" aria-label="Agregar medicamento">+</button><button class="btn ghost mini dd-ver" data-ac="ver-todo">'+(state.ui.verTodo?"Ver menos":"Ver más")+'</button></div>';
-      movilInner='<div class="dia-detalle"><div class="dd-head"><button class="dd-back" data-ac="dia-volver" title="Volver">‹</button><div class="dd-title"><span class="dd-dot" style="background:var(--d'+di+')"></span>'+diaLargo(dm)+' <span class="dd-fch">'+fmtDDMM(dm)+'</span></div></div>'+acc+cuerpoDia+'</div>';
+      const btnsHead='<button class="btn sec xs dd-add" data-ac="agregar-toma" title="Agregar medicamento" aria-label="Agregar medicamento">+</button><button class="btn ghost xs dd-ver" data-ac="ver-todo">'+(state.ui.verTodo?"Ver menos":"Ver más")+'</button>';
+      movilInner='<div class="dia-detalle"><div class="dd-head"><button class="dd-back" data-ac="dia-volver" title="Volver">‹</button><div class="dd-title"><span class="dd-dot" style="background:var(--d'+di+')"></span>'+diaLargo(dm)+' <span class="dd-fch">'+fmtDDMM(dm)+'</span></div>'+btnsHead+'</div>'+cuerpoDia+'</div>';
     }
     const movil='<div class="mob-dia">'+movilInner+'</div>';
 
@@ -796,21 +800,25 @@
       '<button class="icon-btn" data-ac="editar-estado" data-id="'+esc(e.id)+'" title="Editar">✏️</button>'+
       (state.estadosToma.length>1?'<button class="icon-btn del" data-ac="borrar-estado" data-id="'+esc(e.id)+'" title="Eliminar">🗑️</button>':'')+'</div></div>').join("")+'</div>';
 
-    // registro de eliminaciones (con toggle mostrar/ocultar)
+    // registro de eliminaciones (panel siempre visible, lista plegable)
     const elim=state.eliminaciones.filter(x=>x.pastilleroId===state.pastilleroActivo).slice().reverse();
     const elimVis=elim.slice(0,30);
-    const elimHtml = !elim.length ? '' : '<div class="panel"><h3><span class="ic">🧾</span>Eliminaciones registradas</h3>'+
+    const elimLista = elim.length
+      ? '<div class="lista" style="margin-top:12px">'+elimVis.map(x=>'<div class="item"><div class="barra" style="background:var(--critico)"></div><div class="item-main"><div class="item-t">'+esc(x.medNombre)+'</div>'+
+          '<div class="item-s"><span>'+esc(x.tomaFecha?fmtDDMM(x.tomaFecha):'')+' '+esc(x.hora||'')+'</span><span>Motivo: '+esc(x.causa)+'</span></div></div></div>').join("")+'</div>'
+      : '<div class="vacio-lista" style="margin-top:12px">Todavía no hay eliminaciones registradas.</div>';
+    const elimHtml = '<div class="panel"><h3><span class="ic">🧾</span>Eliminaciones registradas</h3>'+
       '<div class="form-actions" style="margin-top:0"><button class="btn ghost block" data-ac="toggle-elim">'+(state.ui.verEliminaciones?'Ocultar eliminaciones':'Ver eliminaciones registradas')+' ('+elim.length+')</button></div>'+
-      (state.ui.verEliminaciones ? '<div class="lista" style="margin-top:12px">'+
-        elimVis.map(x=>'<div class="item"><div class="barra" style="background:var(--critico)"></div><div class="item-main"><div class="item-t">'+esc(x.medNombre)+'</div>'+
-        '<div class="item-s"><span>'+esc(x.tomaFecha?fmtDDMM(x.tomaFecha):'')+' '+esc(x.hora||'')+'</span><span>Motivo: '+esc(x.causa)+'</span></div></div></div>').join("")+'</div>' : '')+
-      '</div>';
+      (state.ui.verEliminaciones ? elimLista : '')+'</div>';
 
     return '<div class="vista-titulo"><h2>Configuración</h2></div>'+
       '<p class="vista-desc">Pastilleros (plantillas), medicamentos, compras, intervalos, estados y recordatorios.</p>'+
       '<div class="panel"><h3><span class="ic">🧰</span>Pastilleros / plantillas</h3><p class="hint">Cada uno tiene número, tipo (semanal o mensual) y fecha de comienzo.</p>'+pastHtml+
         '<div class="form-actions"><button class="btn sec" data-ac="nuevo-past">➕ Nuevo pastillero</button></div></div>'+
       '<div class="panel"><h3><span class="ic">⏱️</span>Intervalo de la cuadrícula</h3><p class="hint">Incluye media hora.</p>'+intHtml+'</div>'+
+      '<div class="panel"><h3><span class="ic">🌈</span>Color de fondo de los días</h3><p class="hint">El color de cada botón de día en la pantalla principal y en la cuadrícula.</p>'+
+        '<div class="grid-form">'+DIAS.map((d,i)=>'<div class="campo"><label><span class="swatch" style="display:inline-block;vertical-align:middle;margin-right:6px;background:var(--d'+i+')"></span>'+esc(d.largo)+'</label><input data-f="dia-color-'+i+'" type="color" value="'+esc((state.config.coloresDias||COLORES_DIAS_DEF)[i])+'"></div>').join("")+'</div>'+
+        '<div class="form-actions"><button class="btn ghost" data-ac="reset-dias">Colores por defecto</button></div></div>'+
       '<div class="panel"><h3><span class="ic">💊</span>Medicamentos y stock</h3><p class="hint">Nombre, droga/dosis, stock y umbral crítico.</p>'+medForm+medLista+'</div>'+
       '<div class="panel"><h3><span class="ic">🛒</span>Registro de compras</h3><p class="hint">Al registrar una compra se suma el stock y queda en el historial.</p>'+compForm+compLista+'</div>'+
       '<div class="panel"><h3><span class="ic">🏷️</span>Estados de toma</h3><p class="hint">El estado cuyo nombre empieza con “Confirm…” es el que descuenta stock.</p>'+estHtml+
@@ -828,9 +836,6 @@
         '<div class="campo"><label>Color secundario</label><input data-f="ap-sec" type="color" value="'+esc(c.colorSecundario)+'"></div></div>'+
         '<div class="preview" style="margin-top:14px"><div class="pv-head">Mi Pastillero</div><div class="pv-body"><span class="pv-dot" style="background:var(--primario)"></span><span class="pv-dot" style="background:var(--secundario)"></span><button class="btn primario mini">Botón</button><button class="btn sec mini">Secundario</button></div></div>'+
         '<div class="form-actions"><button class="btn ghost" data-ac="reset-colores">Colores por defecto</button></div></div>'+
-      '<div class="panel"><h3><span class="ic">🌈</span>Color de cada día</h3><p class="hint">El color de cada botón de día en la pantalla principal y en la cuadrícula.</p>'+
-        '<div class="grid-form">'+DIAS.map((d,i)=>'<div class="campo"><label><span class="swatch" style="display:inline-block;vertical-align:middle;margin-right:6px;background:var(--d'+i+')"></span>'+esc(d.largo)+'</label><input data-f="dia-color-'+i+'" type="color" value="'+esc((c.coloresDias||COLORES_DIAS_DEF)[i])+'"></div>').join("")+'</div>'+
-        '<div class="form-actions"><button class="btn ghost" data-ac="reset-dias">Colores de días por defecto</button></div></div>'+
       '<div class="panel"><h3><span class="ic">🔤</span>Tipografía</h3><div class="fuente-grid">'+fuentes+'</div></div>'+
       panelInstalar()+
       '<div class="panel"><h3><span class="ic">💾</span>Backup y restauración</h3><p class="hint">Exportá un archivo JSON con todos tus datos, o importá uno para traerlos a otro dispositivo.</p>'+
