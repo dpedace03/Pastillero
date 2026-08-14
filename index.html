@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Mi Pastillero">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --primario:#2E7D6B;
@@ -55,16 +55,17 @@
   .app{max-width:1120px;margin:0 auto;min-height:100vh}
   header.top{position:sticky;top:0;z-index:40;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--borde);padding:12px 16px calc(12px + env(safe-area-inset-top)) 16px}
   .top-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .marca{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
   
-  /* Icono de Pastilla en el Encabezado */
+  /* Marca con Titulo Mas Grande y Pastilla */
+  .marca{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.55rem;letter-spacing:-.02em;color:var(--texto)}
+  
   .ic-pastilla{
-    width: 28px;
-    height: 14px;
+    width: 32px;
+    height: 16px;
     border-radius: 99px;
     background: linear-gradient(90deg, var(--primario) 50%, var(--secundario) 50%);
     display: inline-block;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.18);
     transform: rotate(-30deg);
     flex-shrink: 0;
   }
@@ -226,7 +227,7 @@
   .btn.block{width:100%}
   .btn[disabled]{opacity:.5;cursor:not-allowed;box-shadow:none;transform:none}
   
-  /* Botón e Icono del Reloj Optimizado */
+  /* Botón con Reloj SVG dibujado a mano/vector */
   .btn-reloj{
     width: 44px;
     height: 44px;
@@ -240,15 +241,14 @@
     justify-content: center;
     box-shadow: 0 3px 0 var(--borde-fuerte), 0 4px 10px rgba(38,48,44,.12);
     transition: transform .08s, box-shadow .12s;
-    overflow: hidden;
+    cursor: pointer;
   }
-  .btn-reloj img{
-    width: 85%;
-    height: 85%;
-    object-fit: contain;
-    border-radius: 50%;
+  .btn-reloj svg{
+    width: 34px;
+    height: 34px;
+    display: block;
   }
-  .btn-reloj:hover{filter:brightness(1.04);transform:scale(1.05)}
+  .btn-reloj:hover{filter:brightness(1.05);transform:scale(1.06)}
   .btn-reloj:active{transform:translateY(2px);box-shadow:0 0 0 var(--borde-fuerte),0 1px 4px rgba(38,48,44,.1)}
   
   .form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
@@ -281,7 +281,7 @@
   .preview{border:1px solid var(--borde);border-radius:var(--r-sm);overflow:hidden}
   .preview .pv-head{background:var(--primario);color:#fff;padding:12px 16px;font-weight:800}
   .preview .pv-body{padding:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--superficie)}
-  .pv-dot{width:34px;height:34px;border-radius:9px}
+  .pv-dot{width:34px;height:34px;border-radius:99px}
   .fuente-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
   .fuente-op{border:1.5px solid var(--borde-fuerte);border-radius:var(--r-sm);padding:12px;background:var(--superficie-2);text-align:left;transition:.15s}
   .fuente-op:hover{border-color:var(--texto-suave)}
@@ -337,7 +337,7 @@
     .dias-nav{display:flex}
     .grid-form{grid-template-columns:1fr}
     .pastillero-sel select{max-width:150px}
-    .marca{font-size:1.05rem}
+    .marca{font-size:1.3rem}
     .modal{max-width:100%}
   }
   @media(min-width:769px){ .mob-dia{display:none} }
@@ -347,12 +347,37 @@
 <div class="app">
   <header class="top">
     <div class="top-row">
-      <!-- Marca con Icono de Pastilla -->
+      <!-- Marca con Titulo Mas Grande y Pastilla -->
       <div class="marca"><span class="ic-pastilla" aria-hidden="true"></span> Mi Pastillero</div>
-      <!-- Botón de Reloj mejor adaptado -->
+      
+      <!-- Reloj Despertador en SVG Vectorial Puro -->
       <button class="btn-reloj" data-ac="exportar-ics" title="Exportar a calendario (.ics)" aria-label="Exportar a calendario (.ics)">
-        <img src="image_c62c43.jpg" alt="Reloj despertador">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <!-- Campana Izquierda -->
+          <path d="M 22,28 C 8,16 30,2 40,16 Z" fill="#E06D14" stroke="#26302C" stroke-width="3" stroke-linejoin="round"/>
+          <!-- Campana Derecha -->
+          <path d="M 78,28 C 92,16 70,2 60,16 Z" fill="#E06D14" stroke="#26302C" stroke-width="3" stroke-linejoin="round"/>
+          <!-- Botón Superior -->
+          <rect x="46" y="8" width="8" height="8" rx="2" fill="#98A09A" stroke="#26302C" stroke-width="2.5"/>
+          <!-- Patas -->
+          <path d="M 25,82 L 18,94 A 4,4 0 0 0 26,98 L 32,88 Z" fill="#D93829" stroke="#26302C" stroke-width="2.5"/>
+          <path d="M 75,82 L 82,94 A 4,4 0 0 1 74,98 L 68,88 Z" fill="#D93829" stroke="#26302C" stroke-width="2.5"/>
+          <!-- Cuerpo del Reloj -->
+          <circle cx="50" cy="54" r="38" fill="#E52E20" stroke="#26302C" stroke-width="3.5"/>
+          <!-- Esfera Interior Blanca -->
+          <circle cx="50" cy="54" r="28" fill="#FFFFFF" stroke="#26302C" stroke-width="3"/>
+          <!-- Números -->
+          <text x="50" y="38" font-family="sans-serif" font-weight="900" font-size="10" fill="#26302C" text-anchor="middle">12</text>
+          <text x="69" y="57" font-family="sans-serif" font-weight="900" font-size="10" fill="#26302C" text-anchor="middle">3</text>
+          <text x="50" y="76" font-family="sans-serif" font-weight="900" font-size="10" fill="#26302C" text-anchor="middle">6</text>
+          <text x="31" y="57" font-family="sans-serif" font-weight="900" font-size="10" fill="#26302C" text-anchor="middle">9</text>
+          <!-- Agujas del Reloj apuntando a las 12:00 -->
+          <polygon points="48,54 48,34 50,30 52,34 52,54" fill="#D93829" stroke="#26302C" stroke-width="1.5"/>
+          <polygon points="47.5,54 47.5,42 50,38 52.5,42 52.5,54" fill="#D93829" stroke="#26302C" stroke-width="1.5"/>
+          <circle cx="50" cy="54" r="3.5" fill="#7C776C" stroke="#26302C" stroke-width="1.5"/>
+        </svg>
       </button>
+
       <span class="spacer"></span>
       <div class="pastillero-sel"><select id="selPastillero" aria-label="Pastillero activo"></select></div>
     </div>
@@ -1142,7 +1167,7 @@
       '<p class="hint" style="margin-top:14px;margin-bottom:0">⚠️ La notificación del sistema funciona mientras la app esté abierta (aunque sea en segundo plano). Para el aviso con el celular bloqueado, usá el calendario (.ics) de acá arriba.</p></div>';
   }
   function panelInstalar(){
-    return '<div class="panel"><h3><span class="ic">📲</span>Instalar como app</h3><p class="hint">Instalala para abrirla como una app, con su ícono en la pantalla de inicio. Recomendado para que los recordatorios诞den mejor.</p>'+
+    return '<div class="panel"><h3><span class="ic">📲</span>Instalar como app</h3><p class="hint">Instalala para abrirla como una app, con su ícono en la pantalla de inicio. Recomendado para que los recordatorios anden mejor.</p>'+
       '<div class="form-actions" style="margin-top:0"><button class="btn primario" data-ac="instalar-app">📲 Instalar app</button></div>'+
       '<p class="hint" style="margin-top:12px;margin-bottom:0">En <b>Android/Chrome</b>: si no aparece el diálogo, menú ⋮ → “Instalar app”. En <b>iPhone/Safari</b>: botón Compartir → “Agregar a inicio”.</p></div>';
   }
