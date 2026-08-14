@@ -46,7 +46,7 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
-  body{font-family:var(--fuente);background:var(--bg);color:var(--texto);-webkit-font-smoothing:antialiased;line-height:1.45;padding-bottom:env(safe-area-inset-bottom)}
+  body{font-family:var(--fuente);background:var(--bg);color:var(--texto);-webkit-font-smoothing:antialiased;line-height:1.45;padding-bottom:env(safe-area-inset-bottom);transition:background-color .2s ease}
   button{font-family:inherit;cursor:pointer}
   input,select,textarea{font-family:inherit}
   h1,h2,h3{line-height:1.2}
@@ -55,11 +55,20 @@
   .app{max-width:1120px;margin:0 auto;min-height:100vh}
   header.top{position:sticky;top:0;z-index:40;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--borde);padding:12px 16px calc(12px + env(safe-area-inset-top)) 16px}
   .top-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .marca{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
-  .logo{width:34px;height:34px;border-radius:9px;flex:0 0 auto;background:linear-gradient(135deg, var(--primario), color-mix(in srgb,var(--primario) 60%, #000 10%));display:grid;place-items:center;color:#fff;box-shadow:var(--sombra-sm);position:relative}
-  .logo::before,.logo::after{content:"";position:absolute;border-radius:2px;background:rgba(255,255,255,.9)}
-  .logo::before{width:12px;height:5px;top:9px}
-  .logo::after{width:5px;height:12px;left:14.5px;top:11px}
+  .marca{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
+  
+  /* Icono de Pastilla en el Encabezado */
+  .ic-pastilla{
+    width: 28px;
+    height: 14px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--primario) 50%, var(--secundario) 50%);
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    transform: rotate(-30deg);
+    flex-shrink: 0;
+  }
+
   .spacer{flex:1 1 auto}
   .pastillero-sel{position:relative}
   .pastillero-sel select{appearance:none;-webkit-appearance:none;background:var(--superficie);border:1px solid var(--borde-fuerte);border-radius:999px;padding:8px 34px 8px 14px;font-weight:700;font-size:.9rem;color:var(--texto);box-shadow:var(--sombra-sm);max-width:220px}
@@ -114,7 +123,7 @@
   td.celda:hover .add-hint{opacity:.6}
 
   /* Bloque "Toma" en el casillero */
-  .toma-blk{border-radius:9px;padding:8px 6px;text-align:center;font-weight:800;font-size:.82rem;border:1.5px solid;letter-spacing:.01em;user-select:none}
+  .toma-blk{border-radius:99px;padding:8px 6px;text-align:center;font-weight:800;font-size:.82rem;border:1.5px solid;letter-spacing:.01em;user-select:none}
   .toma-blk.pend{background:var(--pastel-pend-bg);border-color:var(--pastel-pend-bd);color:var(--pastel-pend-tx)}
   .toma-blk.ok{background:var(--pastel-ok-bg);border-color:var(--pastel-ok-bd);color:var(--pastel-ok-tx)}
   .toma-blk.neutro{background:var(--pastel-neutro-bg);border-color:var(--pastel-neutro-bd);color:var(--pastel-neutro-tx)}
@@ -122,7 +131,7 @@
 
   .dias-nav{display:none;gap:8px;overflow-x:auto;padding:2px 2px 10px 2px;scrollbar-width:none}
   .dias-nav::-webkit-scrollbar{display:none}
-  .dia-chip{flex:0 0 auto;min-width:62px;text-align:center;background:var(--superficie);border:1.5px solid var(--borde);border-radius:14px;padding:9px 12px;box-shadow:var(--sombra-sm);transition:.15s}
+  .dia-chip{flex:0 0 auto;min-width:62px;text-align:center;background:var(--superficie);border:1.5px solid var(--borde);border-radius:14px;padding:99px 12px;box-shadow:var(--sombra-sm);transition:.15s}
   .dia-chip .dow{font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;gap:5px}
   .dia-chip .dot{width:8px;height:8px;border-radius:50%}
   .dia-chip .fch{font-size:.68rem;color:var(--texto-suave);margin-top:2px;font-variant-numeric:tabular-nums}
@@ -168,7 +177,7 @@
   .dd-fch{font-size:.85rem;font-weight:700;color:var(--texto-suave);font-variant-numeric:tabular-nums;flex:0 0 auto}
   .dd-head .btn.xs{flex:0 0 auto}
   .dd-head .dd-add{width:32px;padding:0;font-size:1.15rem}
-  .hora-card{display:block;width:100%;text-align:left;border:1.5px solid var(--borde);border-left-width:6px;border-radius:16px;padding:14px;margin-bottom:12px;background:var(--superficie);box-shadow:var(--sombra-sm);transition:transform .08s}
+  .hora-card{display:block;width:100%;text-align:left;border:1.5px solid var(--borde);border-left-width:6px;border-radius:16px;padding:14px;margin-bottom:12px;background:var(--superficie);box-shadow:var(--sombra-sm);transition:transform .08s, background-color .2s ease}
   .hora-card:active{transform:scale(.99)}
   .hora-card.pend{border-left-color:var(--pastel-pend-bd);background:color-mix(in srgb,var(--pastel-pend-bg) 50%,var(--superficie))}
   .hora-card.ok{border-left-color:var(--pastel-ok-bd);background:color-mix(in srgb,var(--pastel-ok-bg) 50%,var(--superficie))}
@@ -181,7 +190,7 @@
   .hc-cant{font-size:.8rem;font-weight:800;color:var(--texto-suave);background:color-mix(in srgb,var(--texto) 7%,transparent);padding:2px 10px;border-radius:999px;flex:0 0 auto}
   .hc-vacio{color:var(--texto-tenue);font-size:.92rem}
 
-  .panel{background:var(--superficie);border:1px solid var(--borde);border-radius:var(--r);box-shadow:var(--sombra);padding:18px;margin-bottom:16px}
+  .panel{background:var(--superficie);border:1px solid var(--borde);border-radius:var(--r);box-shadow:var(--sombra);padding:18px;margin-bottom:16px;transition:background-color .2s ease}
   .panel h3{font-size:1rem;margin-bottom:4px;display:flex;align-items:center;gap:8px}
   .panel h3 .ic{font-size:1.05rem}
   .panel .hint{color:var(--texto-suave);font-size:.85rem;margin-bottom:14px}
@@ -190,7 +199,7 @@
   .campo{display:flex;flex-direction:column;gap:5px}
   .campo.full{grid-column:1/-1}
   .campo label{font-weight:700;font-size:.82rem;color:var(--texto-suave)}
-  .campo input,.campo select,.campo textarea{background:var(--superficie-2);border:1.5px solid var(--borde-fuerte);border-radius:var(--r-sm);padding:11px 12px;font-size:.95rem;color:var(--texto);width:100%;transition:border-color .15s, box-shadow .15s}
+  .campo input,.campo select,.campo textarea{background:var(--superficie-2);border:1.5px solid var(--borde-fuerte);border-radius:var(--r-sm);padding:11px 12px;font-size:.95rem;color:var(--texto);width:100%;transition:border-color .15s, box-shadow .15s, background-color .2s ease}
   .campo textarea{resize:vertical;min-height:64px}
   .campo input:focus,.campo select:focus,.campo textarea:focus{outline:none;border-color:var(--primario);box-shadow:0 0 0 3px color-mix(in srgb,var(--primario) 18%,transparent)}
   .campo input[type=color]{padding:4px;height:44px;cursor:pointer}
@@ -212,13 +221,36 @@
     --btn-dark:var(--borde-fuerte);--btn-glow:rgba(38,48,44,.1)}
   .btn.peligro{background:linear-gradient(180deg, color-mix(in srgb,var(--critico) 14%, #fff), color-mix(in srgb,var(--critico) 30%, #fff));color:var(--critico);
     --btn-dark:color-mix(in srgb,var(--critico) 45%, #000 12%);--btn-glow:color-mix(in srgb,var(--critico) 26%, transparent)}
-  .btn.mini{--lift:3px;padding:8px 12px;font-size:.82rem;border-radius:9px}
+  .btn.mini{--lift:3px;padding:8px 12px;font-size:.82rem;border-radius:99px}
   .btn.xs{--lift:2px;padding:6px 10px;font-size:.75rem;border-radius:8px}
   .btn.block{width:100%}
   .btn[disabled]{opacity:.5;cursor:not-allowed;box-shadow:none;transform:none}
-  .btn-reloj{width:38px;height:38px;flex:0 0 auto;border-radius:50%;border:1.5px solid var(--borde-fuerte);background:linear-gradient(180deg,#fff,var(--superficie-2));font-size:1.15rem;line-height:1;display:grid;place-items:center;box-shadow:0 2px 0 var(--borde-fuerte),0 3px 7px rgba(38,48,44,.1);transition:transform .08s, box-shadow .12s}
-  .btn-reloj:hover{filter:brightness(1.03)}
+  
+  /* Botón e Icono del Reloj Optimizado */
+  .btn-reloj{
+    width: 44px;
+    height: 44px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    border: 1.5px solid var(--borde-fuerte);
+    background: var(--superficie);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 0 var(--borde-fuerte), 0 4px 10px rgba(38,48,44,.12);
+    transition: transform .08s, box-shadow .12s;
+    overflow: hidden;
+  }
+  .btn-reloj img{
+    width: 85%;
+    height: 85%;
+    object-fit: contain;
+    border-radius: 50%;
+  }
+  .btn-reloj:hover{filter:brightness(1.04);transform:scale(1.05)}
   .btn-reloj:active{transform:translateY(2px);box-shadow:0 0 0 var(--borde-fuerte),0 1px 4px rgba(38,48,44,.1)}
+  
   .form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 
   .intervalos{display:flex;flex-wrap:wrap;gap:8px}
@@ -226,7 +258,7 @@
   .intervalos button.activo{background:var(--primario);color:#fff;border-color:var(--primario)}
 
   .lista{display:flex;flex-direction:column;gap:10px}
-  .item{display:flex;align-items:center;gap:12px;background:var(--superficie-2);border:1px solid var(--borde);border-radius:var(--r-sm);padding:12px 14px}
+  .item{display:flex;align-items:center;gap:12px;background:var(--superficie-2);border:1px solid var(--borde);border-radius:var(--r-sm);padding:12px 14px;transition:background-color .2s ease}
   .item .barra{width:5px;align-self:stretch;border-radius:3px;background:var(--acc,var(--primario));flex:0 0 auto}
   .item-main{flex:1 1 auto;min-width:0}
   .item-t{font-weight:800;font-size:.95rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -248,7 +280,7 @@
 
   .preview{border:1px solid var(--borde);border-radius:var(--r-sm);overflow:hidden}
   .preview .pv-head{background:var(--primario);color:#fff;padding:12px 16px;font-weight:800}
-  .preview .pv-body{padding:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .preview .pv-body{padding:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--superficie)}
   .pv-dot{width:34px;height:34px;border-radius:9px}
   .fuente-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
   .fuente-op{border:1.5px solid var(--borde-fuerte);border-radius:var(--r-sm);padding:12px;background:var(--superficie-2);text-align:left;transition:.15s}
@@ -269,7 +301,7 @@
 
   .modal-bg{position:fixed;inset:0;z-index:90;background:rgba(20,26,23,.45);backdrop-filter:blur(2px);display:grid;place-items:center;padding:20px;animation:fade .18s ease;overflow-y:auto}
   @keyframes fade{from{opacity:0}to{opacity:1}}
-  .modal{background:var(--superficie);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.28);width:100%;max-width:420px;padding:22px;animation:modalIn .22s cubic-bezier(.2,.8,.2,1);margin:auto}
+  .modal{background:var(--superficie);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.28);width:100%;max-width:420px;padding:22px;animation:modalIn .22s cubic-bezier(.2,.8,.2,1);margin:auto;transition:background-color .2s ease}
   .modal.ancho{max-width:540px}
   @keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(8px)}to{opacity:1;transform:scale(1)}}
   .modal h3{font-size:1.12rem;margin-bottom:4px}
@@ -315,8 +347,12 @@
 <div class="app">
   <header class="top">
     <div class="top-row">
-      <div class="marca"><span class="logo" aria-hidden="true"></span> Mi Pastillero</div>
-      <button class="btn-reloj" data-ac="exportar-ics" title="Exportar a calendario (.ics)" aria-label="Exportar a calendario (.ics)">🕐</button>
+      <!-- Marca con Icono de Pastilla -->
+      <div class="marca"><span class="ic-pastilla" aria-hidden="true"></span> Mi Pastillero</div>
+      <!-- Botón de Reloj mejor adaptado -->
+      <button class="btn-reloj" data-ac="exportar-ics" title="Exportar a calendario (.ics)" aria-label="Exportar a calendario (.ics)">
+        <img src="image_c62c43.jpg" alt="Reloj despertador">
+      </button>
       <span class="spacer"></span>
       <div class="pastillero-sel"><select id="selPastillero" aria-label="Pastillero activo"></select></div>
     </div>
@@ -396,7 +432,16 @@
         {id:"confirmado", nombre:"Confirmado", color:"#3B9E6E"},
         {id:"cancelado",  nombre:"Cancelado",  color:"#9AA29C"}
       ],
-      config:{ intervalo:8, colorPrimario:"#2E7D6B", colorSecundario:"#E0A458", fuente:"'Nunito', system-ui, sans-serif", coloresDias:COLORES_DIAS_DEF.slice(), avisos:{activos:false, sonido:true, antelacion:0} },
+      config:{ 
+        intervalo:8, 
+        colorPrimario:"#2E7D6B", 
+        colorSecundario:"#E0A458", 
+        colorFondo:"#F6F4EF", 
+        colorTarjeta:"#FFFFFF",
+        fuente:"'Nunito', system-ui, sans-serif", 
+        coloresDias:COLORES_DIAS_DEF.slice(), 
+        avisos:{activos:false, sonido:true, antelacion:0} 
+      },
       ui:{ vista:"registrar", semanaOffset:0, verTodo:false, diaMovil:null, editandoToma:null, editandoMed:null, verEliminaciones:false }
     };
   }
@@ -412,6 +457,8 @@
       s = migrar(s);
       const base = estadoInicial();
       s.config = Object.assign(base.config, s.config||{});
+      if(!s.config.colorFondo) s.config.colorFondo = base.config.colorFondo;
+      if(!s.config.colorTarjeta) s.config.colorTarjeta = base.config.colorTarjeta;
       s.config.avisos = Object.assign({}, base.config.avisos, s.config.avisos||{});
       s.config.coloresDias = (Array.isArray(s.config.coloresDias) && s.config.coloresDias.length===7) ? s.config.coloresDias : base.config.coloresDias.slice();
       s.ui = Object.assign(base.ui, s.ui||{});
@@ -429,7 +476,7 @@
     }catch(e){ console.warn("Almacenamiento ilegible, arranco limpio.", e); return estadoInicial(); }
   }
 
-  // Migración desde v1 (tomas con "dia" lun..dom) a v2 (tomas con "fecha")
+  // Migración desde v1 a v2
   function migrar(s){
     if(s.version===2 && !(s.tomas||[]).some(t=>t.dia && !t.fecha)) return s;
     const clavesV1 = {lun:0,mar:1,mie:2,jue:3,vie:4,sab:5,dom:6};
@@ -474,7 +521,7 @@
 
   /* ===================== Stock ===================== */
   function sincronizarStock(t){
-    if(!t.medicamentoId) return;              // toma no registrada => no toca stock
+    if(!t.medicamentoId) return;              
     const m = medPorId(t.medicamentoId); if(!m) return;
     const cant = Number(t.cantidad)||0;
     if(esConfirmado(t) && !t.descontado){ m.stock=Math.max(0,(Number(m.stock)||0)-cant); t.descontado=true; }
@@ -483,7 +530,17 @@
   function revertirStock(t){ if(t.descontado && t.medicamentoId){ const m=medPorId(t.medicamentoId); if(m) m.stock=(Number(m.stock)||0)+(Number(t.cantidad)||0); t.descontado=false; } }
 
   /* ===================== Tema / Toast / Modal ===================== */
-  function aplicarTema(){ const r=document.documentElement.style; r.setProperty("--primario",state.config.colorPrimario); r.setProperty("--secundario",state.config.colorSecundario); r.setProperty("--fuente",state.config.fuente); (state.config.coloresDias||COLORES_DIAS_DEF).forEach((c,i)=>r.setProperty("--d"+i, c)); }
+  function aplicarTema(){ 
+    const r=document.documentElement.style; 
+    const tarj = state.config.colorTarjeta || "#FFFFFF";
+    r.setProperty("--primario",state.config.colorPrimario); 
+    r.setProperty("--secundario",state.config.colorSecundario); 
+    r.setProperty("--bg",state.config.colorFondo || "#F6F4EF");
+    r.setProperty("--superficie", tarj);
+    r.setProperty("--superficie-2", "color-mix(in srgb, "+tarj+" 92%, #000 8%)");
+    r.setProperty("--fuente",state.config.fuente); 
+    (state.config.coloresDias||COLORES_DIAS_DEF).forEach((c,i)=>r.setProperty("--d"+i, c)); 
+  }
 
   function toast(msg,tipo=""){
     const host=$("#toasts"); const el=document.createElement("div");
@@ -800,7 +857,7 @@
       '<button class="icon-btn" data-ac="editar-estado" data-id="'+esc(e.id)+'" title="Editar">✏️</button>'+
       (state.estadosToma.length>1?'<button class="icon-btn del" data-ac="borrar-estado" data-id="'+esc(e.id)+'" title="Eliminar">🗑️</button>':'')+'</div></div>').join("")+'</div>';
 
-    // registro de eliminaciones (panel siempre visible, lista plegable)
+    // registro de eliminaciones
     const elim=state.eliminaciones.filter(x=>x.pastilleroId===state.pastilleroActivo).slice().reverse();
     const elimVis=elim.slice(0,30);
     const elimLista = elim.length
@@ -816,26 +873,37 @@
       '<div class="panel"><h3><span class="ic">🧰</span>Pastilleros / plantillas</h3><p class="hint">Cada uno tiene número, tipo (semanal o mensual) y fecha de comienzo.</p>'+pastHtml+
         '<div class="form-actions"><button class="btn sec" data-ac="nuevo-past">➕ Nuevo pastillero</button></div></div>'+
       '<div class="panel"><h3><span class="ic">⏱️</span>Intervalo de la cuadrícula</h3><p class="hint">Incluye media hora.</p>'+intHtml+'</div>'+
-      '<div class="panel"><h3><span class="ic">🌈</span>Color de fondo de los días</h3><p class="hint">El color de cada botón de día en la pantalla principal y en la cuadrícula.</p>'+
-        '<div class="grid-form">'+DIAS.map((d,i)=>'<div class="campo"><label><span class="swatch" style="display:inline-block;vertical-align:middle;margin-right:6px;background:var(--d'+i+')"></span>'+esc(d.largo)+'</label><input data-f="dia-color-'+i+'" type="color" value="'+esc((state.config.coloresDias||COLORES_DIAS_DEF)[i])+'"></div>').join("")+'</div>'+
-        '<div class="form-actions"><button class="btn ghost" data-ac="reset-dias">Colores por defecto</button></div></div>'+
       '<div class="panel"><h3><span class="ic">💊</span>Medicamentos y stock</h3><p class="hint">Nombre, droga/dosis, stock y umbral crítico.</p>'+medForm+medLista+'</div>'+
       '<div class="panel"><h3><span class="ic">🛒</span>Registro de compras</h3><p class="hint">Al registrar una compra se suma el stock y queda en el historial.</p>'+compForm+compLista+'</div>'+
       '<div class="panel"><h3><span class="ic">🏷️</span>Estados de toma</h3><p class="hint">El estado cuyo nombre empieza con “Confirm…” es el que descuenta stock.</p>'+estHtml+
         '<div class="form-actions"><button class="btn sec" data-ac="nuevo-estado">➕ Nuevo estado</button></div></div>'+ elimHtml + panelRecordatorios();
   }
 
-  /* ---------- Ajustes (apariencia + backup) ---------- */
+  /* ---------- Ajustes (apariencia + colores consolidado) ---------- */
   function vistaAjustes(){
     const c=state.config;
     const fuentes=FUENTES.map(f=>'<button class="fuente-op'+(c.fuente===f.css?' activo':'')+'" data-ac="set-fuente" data-css="'+esc(f.css)+'" style="font-family:'+esc(f.css)+'"><div class="fn">'+esc(f.nombre)+'</div><div class="ej">Aa Toma 8:00</div></button>').join("");
+    
     return '<div class="vista-titulo"><h2>Ajustes</h2></div>'+
-      '<p class="vista-desc">Apariencia y respaldo de datos.</p>'+
-      '<div class="panel"><h3><span class="ic">🎨</span>Colores</h3><div class="grid-form">'+
-        '<div class="campo"><label>Color primario</label><input data-f="ap-prim" type="color" value="'+esc(c.colorPrimario)+'"></div>'+
-        '<div class="campo"><label>Color secundario</label><input data-f="ap-sec" type="color" value="'+esc(c.colorSecundario)+'"></div></div>'+
-        '<div class="preview" style="margin-top:14px"><div class="pv-head">Mi Pastillero</div><div class="pv-body"><span class="pv-dot" style="background:var(--primario)"></span><span class="pv-dot" style="background:var(--secundario)"></span><button class="btn primario mini">Botón</button><button class="btn sec mini">Secundario</button></div></div>'+
-        '<div class="form-actions"><button class="btn ghost" data-ac="reset-colores">Colores por defecto</button></div></div>'+
+      '<p class="vista-desc">Personalización visual, colores generales y respaldo de datos.</p>'+
+      
+      /* Panel Consolidado de Colores */
+      '<div class="panel"><h3><span class="ic">🎨</span>Configuración de Colores</h3>'+
+        '<p class="hint">Personalizá la paleta de colores general, tarjetas y días de la semana.</p>'+
+        '<div class="grid-form">'+
+          '<div class="campo"><label>Color primario</label><input data-f="ap-prim" type="color" value="'+esc(c.colorPrimario)+'"></div>'+
+          '<div class="campo"><label>Color secundario</label><input data-f="ap-sec" type="color" value="'+esc(c.colorSecundario)+'"></div>'+
+          '<div class="campo"><label>Fondo de pantallas</label><input data-f="ap-bg" type="color" value="'+esc(c.colorFondo||"#F6F4EF")+'"></div>'+
+          '<div class="campo"><label>Fondo de tarjetas / cards (Cargar, Config, Detalle)</label><input data-f="ap-tarjeta" type="color" value="'+esc(c.colorTarjeta||"#FFFFFF")+'"></div>'+
+        '</div>'+
+        
+        '<h4 style="font-size:.9rem;margin:16px 0 8px 0;color:var(--texto)">Color de fondo de los días</h4>'+
+        '<div class="grid-form">'+DIAS.map((d,i)=>'<div class="campo"><label><span class="swatch" style="display:inline-block;vertical-align:middle;margin-right:6px;background:var(--d'+i+')"></span>'+esc(d.largo)+'</label><input data-f="dia-color-'+i+'" type="color" value="'+esc((state.config.coloresDias||COLORES_DIAS_DEF)[i])+'"></div>').join("")+'</div>'+
+
+        '<div class="preview" style="margin-top:16px"><div class="pv-head">Mi Pastillero</div><div class="pv-body"><span class="pv-dot" style="background:var(--primario)"></span><span class="pv-dot" style="background:var(--secundario)"></span><button class="btn primario mini">Botón</button><button class="btn sec mini">Secundario</button></div></div>'+
+        '<div class="form-actions"><button class="btn ghost" data-ac="reset-colores">Restablecer todos los colores</button></div>'+
+      '</div>'+
+
       '<div class="panel"><h3><span class="ic">🔤</span>Tipografía</h3><div class="fuente-grid">'+fuentes+'</div></div>'+
       panelInstalar()+
       '<div class="panel"><h3><span class="ic">💾</span>Backup y restauración</h3><p class="hint">Exportá un archivo JSON con todos tus datos, o importá uno para traerlos a otro dispositivo.</p>'+
@@ -906,10 +974,8 @@
     const nuevoInicio=addDays(cols[0],7);
     const nid=uid(); const num=(++state.contadorPastillero);
     state.pastilleros.push({id:nid,numero:num,nombre:p.nombre.replace(/\s*\(copia.*\)$/,'')+" (copia)",tipo:p.tipo,fechaInicio:nuevoInicio,creado:hoyISO()});
-    // copio catálogo de medicamentos (mismo stock actual)
     const mapa={};
     state.medicamentos.filter(m=>m.pastilleroId===p.id).forEach(m=>{ const nm={id:uid(),pastilleroId:nid,nombre:m.nombre,dosis:m.dosis,stock:m.stock,stockCritico:m.stockCritico}; mapa[m.id]=nm.id; state.medicamentos.push(nm); });
-    // copio SOLO tomas registradas de la semana, en Pendiente y +7 días
     const set=new Set(cols); const pend=state.estadosToma.find(e=>e.nombre.toLowerCase().startsWith("pend"))||state.estadosToma[0];
     let n=0;
     state.tomas.filter(t=>t.pastilleroId===p.id && set.has(t.fecha) && t.medicamentoId && mapa[t.medicamentoId]).forEach(t=>{
@@ -927,7 +993,7 @@
     setTimeout(()=>URL.revokeObjectURL(url),1000); toast("Backup exportado","ok");
   }
 
-  /* ---- Google/Apple Calendar (.ics con alarmas nativas) ---- */
+  /* ---- Calendar (.ics) ---- */
   const _pad = (n) => String(n).padStart(2,"0");
   const icsEsc = (s) => String(s==null?"":s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");
   function icsStampUTC(){ const d=new Date(); return d.getUTCFullYear()+_pad(d.getUTCMonth()+1)+_pad(d.getUTCDate())+"T"+_pad(d.getUTCHours())+_pad(d.getUTCMinutes())+_pad(d.getUTCSeconds())+"Z"; }
@@ -976,7 +1042,7 @@
     r.readAsText(file);
   }
 
-  /* ===================== Avisos con la app abierta ===================== */
+  /* ===================== Avisos ===================== */
   let audioCtx=null, deferredPrompt=null, schedulerId=null, _iconCache={};
   let avisadas = cargarAvisadas();
 
@@ -1047,7 +1113,7 @@
       const setLink=(rel,href)=>{ let l=document.querySelector('link[rel="'+rel+'"]'); if(!l){ l=document.createElement("link"); l.rel=rel; document.head.appendChild(l);} if(href) l.href=href; return l; };
       if(i192){ setLink("apple-touch-icon", i192); setLink("icon", i192); }
       const manifest={ name:"Mi Pastillero", short_name:"Pastillero", start_url:".", scope:".", display:"standalone",
-        background_color:"#F6F4EF", theme_color:state.config.colorPrimario, description:"Gestión de tomas de medicación",
+        background_color:state.config.colorFondo||"#F6F4EF", theme_color:state.config.colorPrimario, description:"Gestión de tomas de medicación",
         icons: i192 ? [ {src:i192,sizes:"192x192",type:"image/png",purpose:"any maskable"}, {src:i512,sizes:"512x512",type:"image/png",purpose:"any maskable"} ] : [] };
       const url=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:"application/manifest+json"}));
       setLink("manifest", url);
@@ -1055,7 +1121,7 @@
     }catch(e){}
   }
 
-  /* ===================== Paneles (avisos e instalación) ===================== */
+  /* ===================== Paneles ===================== */
   function panelRecordatorios(){
     const icsBloque='<div class="add-box" style="margin-top:14px"><div class="tr-n" style="margin-bottom:4px">📅 Aviso con el celular cerrado</div>'+
       '<p class="hint" style="margin-top:0">Exportá tus tomas futuras a un archivo <b>.ics</b> e importalo una vez en Google Calendar o el calendario del iPhone. El calendario dispara alarmas nativas aunque la app esté cerrada. Si cambiás tomas, volvé a exportar.</p>'+
@@ -1076,7 +1142,7 @@
       '<p class="hint" style="margin-top:14px;margin-bottom:0">⚠️ La notificación del sistema funciona mientras la app esté abierta (aunque sea en segundo plano). Para el aviso con el celular bloqueado, usá el calendario (.ics) de acá arriba.</p></div>';
   }
   function panelInstalar(){
-    return '<div class="panel"><h3><span class="ic">📲</span>Instalar como app</h3><p class="hint">Instalala para abrirla como una app, con su ícono en la pantalla de inicio. Recomendado para que los recordatorios anden mejor.</p>'+
+    return '<div class="panel"><h3><span class="ic">📲</span>Instalar como app</h3><p class="hint">Instalala para abrirla como una app, con su ícono en la pantalla de inicio. Recomendado para que los recordatorios诞den mejor.</p>'+
       '<div class="form-actions" style="margin-top:0"><button class="btn primario" data-ac="instalar-app">📲 Instalar app</button></div>'+
       '<p class="hint" style="margin-top:12px;margin-bottom:0">En <b>Android/Chrome</b>: si no aparece el diálogo, menú ⋮ → “Instalar app”. En <b>iPhone/Safari</b>: botón Compartir → “Agregar a inicio”.</p></div>';
   }
@@ -1203,8 +1269,13 @@
 
       /* Ajustes */
       case "set-fuente": state.config.fuente=btn.dataset.css; guardar(); render(); break;
-      case "reset-colores": state.config.colorPrimario="#2E7D6B"; state.config.colorSecundario="#E0A458"; guardar(); render(); toast("Colores restablecidos","ok"); break;
-      case "reset-dias": state.config.coloresDias=COLORES_DIAS_DEF.slice(); aplicarTema(); guardar(); render(); toast("Colores de días restablecidos","ok"); break;
+      case "reset-colores": 
+        state.config.colorPrimario="#2E7D6B"; 
+        state.config.colorSecundario="#E0A458"; 
+        state.config.colorFondo="#F6F4EF";
+        state.config.colorTarjeta="#FFFFFF";
+        state.config.coloresDias=COLORES_DIAS_DEF.slice(); 
+        aplicarTema(); guardar(); render(); toast("Colores restablecidos","ok"); break;
       case "toggle-elim": state.ui.verEliminaciones=!state.ui.verEliminaciones; guardar(); render(); break;
       case "exportar": exportar(); break;
       case "exportar-ics": exportarICS(); break;
@@ -1246,6 +1317,8 @@
     const el=e.target.closest("[data-f]"); if(!el) return;
     if(el.dataset.f==="ap-prim"){ state.config.colorPrimario=el.value; aplicarTema(); guardar(); }
     else if(el.dataset.f==="ap-sec"){ state.config.colorSecundario=el.value; aplicarTema(); guardar(); }
+    else if(el.dataset.f==="ap-bg"){ state.config.colorFondo=el.value; aplicarTema(); guardar(); }
+    else if(el.dataset.f==="ap-tarjeta"){ state.config.colorTarjeta=el.value; aplicarTema(); guardar(); }
     else if(el.dataset.f && el.dataset.f.indexOf("dia-color-")===0){ const i=parseInt(el.dataset.f.slice(10),10); if(!Array.isArray(state.config.coloresDias)) state.config.coloresDias=COLORES_DIAS_DEF.slice(); state.config.coloresDias[i]=el.value; aplicarTema(); guardar(); }
   });
 
