@@ -166,6 +166,9 @@
   .dd-title{font-size:1.3rem;font-weight:800;display:flex;align-items:center;gap:9px}
   .dd-dot{width:14px;height:14px;border-radius:50%;flex:0 0 auto}
   .dd-fch{font-size:.9rem;font-weight:700;color:var(--texto-suave);font-variant-numeric:tabular-nums}
+  .dd-acc{display:flex;gap:10px;align-items:stretch;margin:0 0 14px}
+  .dd-acc .dd-add{flex:0 0 auto;width:48px;padding-left:0;padding-right:0;font-size:1.4rem}
+  .dd-acc .dd-ver{flex:1 1 auto}
   .hora-card{display:block;width:100%;text-align:left;border:1.5px solid var(--borde);border-left-width:6px;border-radius:16px;padding:14px;margin-bottom:12px;background:var(--superficie);box-shadow:var(--sombra-sm);transition:transform .08s}
   .hora-card:active{transform:scale(.99)}
   .hora-card.pend{border-left-color:var(--pastel-pend-bd);background:color-mix(in srgb,var(--pastel-pend-bg) 50%,var(--superficie))}
@@ -337,6 +340,7 @@
     {k:"apariencia",ic:"🎨", label:"Ajustes"}
   ];
   const INTERVALOS = [0.5,1,2,4,6,8,12];
+  const COLORES_DIAS_DEF = ["#E8927C","#E0A458","#CBB24E","#6FAE6A","#3FA0A2","#6C8CC7","#A283C9"];
   const FUENTES = [
     {css:"'Nunito', system-ui, sans-serif", nombre:"Nunito"},
     {css:"'Inter', system-ui, sans-serif", nombre:"Inter"},
@@ -388,8 +392,8 @@
         {id:"confirmado", nombre:"Confirmado", color:"#3B9E6E"},
         {id:"cancelado",  nombre:"Cancelado",  color:"#9AA29C"}
       ],
-      config:{ intervalo:8, colorPrimario:"#2E7D6B", colorSecundario:"#E0A458", fuente:"'Nunito', system-ui, sans-serif", avisos:{activos:false, sonido:true, antelacion:0} },
-      ui:{ vista:"registrar", semanaOffset:0, verTodo:false, diaMovil:null, editandoToma:null, editandoMed:null }
+      config:{ intervalo:8, colorPrimario:"#2E7D6B", colorSecundario:"#E0A458", fuente:"'Nunito', system-ui, sans-serif", coloresDias:COLORES_DIAS_DEF.slice(), avisos:{activos:false, sonido:true, antelacion:0} },
+      ui:{ vista:"registrar", semanaOffset:0, verTodo:false, diaMovil:null, editandoToma:null, editandoMed:null, verEliminaciones:false }
     };
   }
 
@@ -405,7 +409,9 @@
       const base = estadoInicial();
       s.config = Object.assign(base.config, s.config||{});
       s.config.avisos = Object.assign({}, base.config.avisos, s.config.avisos||{});
+      s.config.coloresDias = (Array.isArray(s.config.coloresDias) && s.config.coloresDias.length===7) ? s.config.coloresDias : base.config.coloresDias.slice();
       s.ui = Object.assign(base.ui, s.ui||{});
+      s.ui.vista = "registrar"; s.ui.diaMovil = null; s.ui.editandoToma = null; s.ui.editandoMed = null;
       if(!Array.isArray(s.estadosToma)||!s.estadosToma.length) s.estadosToma = base.estadosToma;
       if(!Array.isArray(s.pastilleros)||!s.pastilleros.length){ s.pastilleros=base.pastilleros; s.pastilleroActivo=base.pastilleroActivo; }
       if(!s.pastilleros.some(p=>p.id===s.pastilleroActivo)) s.pastilleroActivo=s.pastilleros[0].id;
@@ -473,7 +479,7 @@
   function revertirStock(t){ if(t.descontado && t.medicamentoId){ const m=medPorId(t.medicamentoId); if(m) m.stock=(Number(m.stock)||0)+(Number(t.cantidad)||0); t.descontado=false; } }
 
   /* ===================== Tema / Toast / Modal ===================== */
-  function aplicarTema(){ const r=document.documentElement.style; r.setProperty("--primario",state.config.colorPrimario); r.setProperty("--secundario",state.config.colorSecundario); r.setProperty("--fuente",state.config.fuente); }
+  function aplicarTema(){ const r=document.documentElement.style; r.setProperty("--primario",state.config.colorPrimario); r.setProperty("--secundario",state.config.colorSecundario); r.setProperty("--fuente",state.config.fuente); (state.config.coloresDias||COLORES_DIAS_DEF).forEach((c,i)=>r.setProperty("--d"+i, c)); }
 
   function toast(msg,tipo=""){
     const host=$("#toasts"); const el=document.createElement("div");
@@ -632,7 +638,7 @@
           return '<button class="hora-card '+clsHora+'" data-ac="celda" data-fecha="'+dm+'" data-hora="'+f+'"><div class="hc-hora">🕐 '+f+'</div><div class="hc-meds">'+medsHtml+'</div></button>';
         }).join("");
       }
-      const acc='<div class="form-actions" style="margin:0 0 14px"><button class="btn sec mini" data-ac="agregar-toma">➕ Agregar medicamento</button><button class="btn ghost mini" data-ac="ver-todo">'+(state.ui.verTodo?"Ocultar horarios vacíos":"Ver todos los horarios")+'</button></div>';
+      const acc='<div class="dd-acc"><button class="btn sec mini dd-add" data-ac="agregar-toma" title="Agregar medicamento" aria-label="Agregar medicamento">+</button><button class="btn ghost mini dd-ver" data-ac="ver-todo">'+(state.ui.verTodo?"Ver menos":"Ver más")+'</button></div>';
       movilInner='<div class="dia-detalle"><div class="dd-head"><button class="dd-back" data-ac="dia-volver" title="Volver">‹</button><div class="dd-title"><span class="dd-dot" style="background:var(--d'+di+')"></span>'+diaLargo(dm)+' <span class="dd-fch">'+fmtDDMM(dm)+'</span></div></div>'+acc+cuerpoDia+'</div>';
     }
     const movil='<div class="mob-dia">'+movilInner+'</div>';
@@ -790,22 +796,25 @@
       '<button class="icon-btn" data-ac="editar-estado" data-id="'+esc(e.id)+'" title="Editar">✏️</button>'+
       (state.estadosToma.length>1?'<button class="icon-btn del" data-ac="borrar-estado" data-id="'+esc(e.id)+'" title="Eliminar">🗑️</button>':'')+'</div></div>').join("")+'</div>';
 
-    // registro de eliminaciones
-    const elim=state.eliminaciones.filter(x=>x.pastilleroId===state.pastilleroActivo).slice().reverse().slice(0,6);
-    const elimHtml = !elim.length ? '' : '<div class="panel"><h3><span class="ic">🧾</span>Eliminaciones registradas</h3><div class="lista">'+
-      elim.map(x=>'<div class="item"><div class="barra" style="background:var(--critico)"></div><div class="item-main"><div class="item-t">'+esc(x.medNombre)+'</div>'+
-      '<div class="item-s"><span>'+esc(x.tomaFecha?fmtDDMM(x.tomaFecha):'')+' '+esc(x.hora||'')+'</span><span>Motivo: '+esc(x.causa)+'</span></div></div></div>').join("")+'</div></div>';
+    // registro de eliminaciones (con toggle mostrar/ocultar)
+    const elim=state.eliminaciones.filter(x=>x.pastilleroId===state.pastilleroActivo).slice().reverse();
+    const elimVis=elim.slice(0,30);
+    const elimHtml = !elim.length ? '' : '<div class="panel"><h3><span class="ic">🧾</span>Eliminaciones registradas</h3>'+
+      '<div class="form-actions" style="margin-top:0"><button class="btn ghost block" data-ac="toggle-elim">'+(state.ui.verEliminaciones?'Ocultar eliminaciones':'Ver eliminaciones registradas')+' ('+elim.length+')</button></div>'+
+      (state.ui.verEliminaciones ? '<div class="lista" style="margin-top:12px">'+
+        elimVis.map(x=>'<div class="item"><div class="barra" style="background:var(--critico)"></div><div class="item-main"><div class="item-t">'+esc(x.medNombre)+'</div>'+
+        '<div class="item-s"><span>'+esc(x.tomaFecha?fmtDDMM(x.tomaFecha):'')+' '+esc(x.hora||'')+'</span><span>Motivo: '+esc(x.causa)+'</span></div></div></div>').join("")+'</div>' : '')+
+      '</div>';
 
     return '<div class="vista-titulo"><h2>Configuración</h2></div>'+
-      '<p class="vista-desc">Recordatorios, pastilleros (plantillas), medicamentos, compras, intervalos y estados.</p>'+
-      panelRecordatorios()+
+      '<p class="vista-desc">Pastilleros (plantillas), medicamentos, compras, intervalos, estados y recordatorios.</p>'+
       '<div class="panel"><h3><span class="ic">🧰</span>Pastilleros / plantillas</h3><p class="hint">Cada uno tiene número, tipo (semanal o mensual) y fecha de comienzo.</p>'+pastHtml+
         '<div class="form-actions"><button class="btn sec" data-ac="nuevo-past">➕ Nuevo pastillero</button></div></div>'+
       '<div class="panel"><h3><span class="ic">⏱️</span>Intervalo de la cuadrícula</h3><p class="hint">Incluye media hora.</p>'+intHtml+'</div>'+
       '<div class="panel"><h3><span class="ic">💊</span>Medicamentos y stock</h3><p class="hint">Nombre, droga/dosis, stock y umbral crítico.</p>'+medForm+medLista+'</div>'+
       '<div class="panel"><h3><span class="ic">🛒</span>Registro de compras</h3><p class="hint">Al registrar una compra se suma el stock y queda en el historial.</p>'+compForm+compLista+'</div>'+
       '<div class="panel"><h3><span class="ic">🏷️</span>Estados de toma</h3><p class="hint">El estado cuyo nombre empieza con “Confirm…” es el que descuenta stock.</p>'+estHtml+
-        '<div class="form-actions"><button class="btn sec" data-ac="nuevo-estado">➕ Nuevo estado</button></div></div>'+ elimHtml;
+        '<div class="form-actions"><button class="btn sec" data-ac="nuevo-estado">➕ Nuevo estado</button></div></div>'+ elimHtml + panelRecordatorios();
   }
 
   /* ---------- Ajustes (apariencia + backup) ---------- */
@@ -819,6 +828,9 @@
         '<div class="campo"><label>Color secundario</label><input data-f="ap-sec" type="color" value="'+esc(c.colorSecundario)+'"></div></div>'+
         '<div class="preview" style="margin-top:14px"><div class="pv-head">Mi Pastillero</div><div class="pv-body"><span class="pv-dot" style="background:var(--primario)"></span><span class="pv-dot" style="background:var(--secundario)"></span><button class="btn primario mini">Botón</button><button class="btn sec mini">Secundario</button></div></div>'+
         '<div class="form-actions"><button class="btn ghost" data-ac="reset-colores">Colores por defecto</button></div></div>'+
+      '<div class="panel"><h3><span class="ic">🌈</span>Color de cada día</h3><p class="hint">El color de cada botón de día en la pantalla principal y en la cuadrícula.</p>'+
+        '<div class="grid-form">'+DIAS.map((d,i)=>'<div class="campo"><label><span class="swatch" style="display:inline-block;vertical-align:middle;margin-right:6px;background:var(--d'+i+')"></span>'+esc(d.largo)+'</label><input data-f="dia-color-'+i+'" type="color" value="'+esc((c.coloresDias||COLORES_DIAS_DEF)[i])+'"></div>').join("")+'</div>'+
+        '<div class="form-actions"><button class="btn ghost" data-ac="reset-dias">Colores de días por defecto</button></div></div>'+
       '<div class="panel"><h3><span class="ic">🔤</span>Tipografía</h3><div class="fuente-grid">'+fuentes+'</div></div>'+
       panelInstalar()+
       '<div class="panel"><h3><span class="ic">💾</span>Backup y restauración</h3><p class="hint">Exportá un archivo JSON con todos tus datos, o importá uno para traerlos a otro dispositivo.</p>'+
@@ -1187,6 +1199,8 @@
       /* Ajustes */
       case "set-fuente": state.config.fuente=btn.dataset.css; guardar(); render(); break;
       case "reset-colores": state.config.colorPrimario="#2E7D6B"; state.config.colorSecundario="#E0A458"; guardar(); render(); toast("Colores restablecidos","ok"); break;
+      case "reset-dias": state.config.coloresDias=COLORES_DIAS_DEF.slice(); aplicarTema(); guardar(); render(); toast("Colores de días restablecidos","ok"); break;
+      case "toggle-elim": state.ui.verEliminaciones=!state.ui.verEliminaciones; guardar(); render(); break;
       case "exportar": exportar(); break;
       case "exportar-ics": exportarICS(); break;
       case "importar": $("#fileImport").click(); break;
@@ -1227,6 +1241,7 @@
     const el=e.target.closest("[data-f]"); if(!el) return;
     if(el.dataset.f==="ap-prim"){ state.config.colorPrimario=el.value; aplicarTema(); guardar(); }
     else if(el.dataset.f==="ap-sec"){ state.config.colorSecundario=el.value; aplicarTema(); guardar(); }
+    else if(el.dataset.f && el.dataset.f.indexOf("dia-color-")===0){ const i=parseInt(el.dataset.f.slice(10),10); if(!Array.isArray(state.config.coloresDias)) state.config.coloresDias=COLORES_DIAS_DEF.slice(); state.config.coloresDias[i]=el.value; aplicarTema(); guardar(); }
   });
 
   /* ===================== Arranque ===================== */
